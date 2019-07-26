@@ -25,9 +25,13 @@ TODO GKE イメージ起動時になにかコマンド実行できるのか？
 TODO 開発環境 Docker 用に /app/etc/env.php のサンプルを用意（消滅時の復旧方法も必要）
 
 PEND init したのに database 空っぽ => 初期化コマンド必要？ => 二度目大丈夫だった謎。
+DONE CloudSQL 置き換え
 DONE /app/etc/env.php の扱い => .dockerignoreで除外
 DONE Resource Requests の記載（magento, mysql）
 DONE Dockerfile で www-data にユーザー変更
+
+記録付き更新
+kubectl apply -f magento.yaml --record
 
 credentials 設定（入力文字列から）
 kubectl create secret generic mysql --from-literal=password=YOUR_PASSWORD
@@ -44,6 +48,14 @@ https://qiita.com/tkow/items/e256c0a50c4b2c832c52
 shell ログイン
 kubectl exec -it shell-demo -- /bin/bash
 https://kubernetes.io/docs/tasks/debug-application-cluster/get-shell-running-container/
+
+cloudsql
+[Google Kubernetes Engine から接続する  |  Cloud SQL for MySQL  |  Google Cloud](https://cloud.google.com/sql/docs/mysql/connect-kubernetes-engine?hl=ja)
+
+作成、プライベートIP、service networking api
+
+アカウントunlock
+./bin/magento admin:user:unlock admin
 
 docker run -d IMAGE_NAME
 docker rm CONTAINER_NAME
