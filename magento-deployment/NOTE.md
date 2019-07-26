@@ -1,14 +1,28 @@
 
-TODO CloudSQL 置き換え
-TODO /app/etc/ を永続化 or 環境変数化（環境変数化するならDBのスキーマ作る機能が必要になる）
-TODO 開発環境 Docker 用に /app/etc/env.php のサンプルを用意（復旧方法も必要）
-TODO Dockerfile で magento2 エラーログ吐き出す場所指定？
-TODO HTTPS
-TODO セッション
-TODO キャッシュデータ
-TODO アセット
+TODO /app/etc/ 対応
+    永続化 => 変化に耐えない
+    環境変数化 => ベターではないがとりあえずの手段
+    config map => ファイル読み込み版。試してみる
+        - config map --from-file 作成 OK
+        - deployments.yaml にconfigmap 作成（ファイル直指定できた） OK
+        - ログインして読み込み確認
+TODO バッチ運用 magento コマンド運用
+    - schema の追加ができればOK
+TODO Assets 永続化ディスク
+TODO セッション、キャッシュ
 TODO Cron
+TODO メール
+
+TODO WAF、ネットワーク防御
+TODO HTTPS
+TODO ドメイン紐付け
+TODO Magento アップデート運用
+
+TODO Dockerfile で magento2 エラーログ吐き出す場所指定？
 TODO node-pool の node にどう分散するの？
+TODO 構成管理 Cloud Deployment Manager
+TODO GKE イメージ起動時になにかコマンド実行できるのか？
+TODO 開発環境 Docker 用に /app/etc/env.php のサンプルを用意（消滅時の復旧方法も必要）
 
 PEND init したのに database 空っぽ => 初期化コマンド必要？ => 二度目大丈夫だった謎。
 DONE /app/etc/env.php の扱い => .dockerignoreで除外
