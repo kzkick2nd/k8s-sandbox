@@ -33,7 +33,7 @@ spec:
         tier: frontend
     spec:
       containers:
-        - image: asia.gcr.io/magento-gke/magento
+        - image: asia.gcr.io/magento-gke/magento:3
           name: magento
           resources:
             requests:
@@ -42,3 +42,11 @@ spec:
           ports:
             - containerPort: 80
               name: magento
+          volumeMounts:
+            - name: magento-env
+              mountPath: /var/www/html/app/etc/env.php
+              subPath: magento-env.php
+      volumes:
+        - name: magento-env
+          configMap:
+            name: magento-env
