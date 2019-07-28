@@ -90,3 +90,27 @@ cloudsql
 docker run -d IMAGE_NAME
 docker rm CONTAINER_NAME
 docker rmi REPO:TAG => タグ指定削除
+
+#### サンプル magento setup コマンド
+bin/magento setup:install \
+--base-url=http:// \
+--db-host= \
+--db-name=magento \
+--db-user=root \
+--db-password=password \
+--backend-frontname=admin \
+--admin-firstname=admin \
+--admin-lastname=admin \
+--admin-email=aruga.kazuki@gmail.com \
+--admin-user=admin \
+--admin-password=Passw0rd! \
+--language=ja_JP \
+--currency=JPY \
+--timezone=Asia/Tokyo \
+--use-rewrites=1
+
+Redis
+[Use Redis for the Magento page and default cache | Magento 2 Developer Documentation](https://devdocs.magento.com/guides/v2.3/config-guide/redis/redis-pg-cache.html)
+
+Docker イメージづくりのヒント（composer keyの渡し方）に
+[Dockerセキュリティ: 今すぐ役に立つテクニックから，次世代技術まで](https://www.slideshare.net/AkihiroSuda/docker-125002128)
