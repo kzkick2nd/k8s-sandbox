@@ -37,6 +37,7 @@ TODO node-pool の node にどう分散するの？
 TODO 構成管理 Cloud Deployment Manager
 TODO GKE イメージ起動時になにかコマンド実行できるのか？
 TODO 開発環境 Docker 用に /app/etc/env.php のサンプルを用意（消滅時の復旧方法も必要）
+TODO アプリのデプロイ
 
 PEND init したのに database 空っぽ => 初期化コマンド必要？ => 二度目大丈夫だった謎。
 DONE セッション OK、キャッシュ OK => redisを立ててenv.php => クラスターを組む場合どうしよう
