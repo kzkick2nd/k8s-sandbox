@@ -11,6 +11,10 @@ TODO /app/etc/ 対応
         - subPath だと更新されない★
             - "Note: A container using a ConfigMap as a subPath volume will not receive ConfigMap updates."
 
+TODO Assets 共有ディスク => pub/media/upload
+    - 通常pvcディスク NG = 共有できない。中身消える recalim policy = delete <= 変更するにはpv作るところから
+    - Google Cloud Filestore => いけそう => 高すぎ
+    - 共有ディスクどうしよう問題 => NFS型使うか
 TODO Cron
 TODO メール
 
