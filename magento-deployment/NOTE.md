@@ -4,12 +4,13 @@ TODO /app/etc/ 対応
     環境変数化 => ベターではないがとりあえずの手段
     config map => ファイル読み込み版。試してみる
         - config map --from-file 作成 OK
+            - kubectl create configmap magento-env --from-file=
+            - kubectl delete configmap magento-env
         - deployments.yaml にconfigmap 作成（ファイル直指定できた） OK
-        - ログインして読み込み確認
-TODO バッチ運用 magento コマンド運用
-    - schema の追加ができればOK
-TODO Assets 永続化ディスク
-TODO セッション、キャッシュ
+        - ログインして読み込み確認 OK
+        - subPath だと更新されない★
+            - "Note: A container using a ConfigMap as a subPath volume will not receive ConfigMap updates."
+
 TODO Cron
 TODO メール
 
