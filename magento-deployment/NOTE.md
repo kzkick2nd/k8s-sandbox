@@ -39,6 +39,21 @@ TODO GKE イメージ起動時になにかコマンド実行できるのか？
 TODO 開発環境 Docker 用に /app/etc/env.php のサンプルを用意（消滅時の復旧方法も必要）
 
 PEND init したのに database 空っぽ => 初期化コマンド必要？ => 二度目大丈夫だった謎。
+DONE セッション OK、キャッシュ OK => redisを立ててenv.php => クラスターを組む場合どうしよう
+DONE バッチ運用 magento コマンド運用
+    - サイト基本設定
+        - 最初のデータを入れるのだけコマンド必要？
+        - $ bin/magento setup:store-config:set --base-url=
+                --language=ja_JP \
+                --currency=JPY \
+                --timezone=Asia/Tokyo \
+                --use-rewrites=1
+        - bin/magento admin:user:create --admin-user=admin --admin-password=!Dnut8hic --admin-email=aruga.kazuki@gmail.com --admin-firstname=kazuki --admin-lastname=aruga
+        - $ bin/magento cache:flush
+    - schema の追加ができればOK
+        - SSH してコマンド直うち
+        - $ bin/magento setup:db-schema:upgrade
+        - $ bin/magento setup:db-data:upgrade
 DONE CloudSQL 置き換え
 DONE /app/etc/env.php の扱い => .dockerignoreで除外
 DONE Resource Requests の記載（magento, mysql）
