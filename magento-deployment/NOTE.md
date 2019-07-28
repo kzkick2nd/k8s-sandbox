@@ -18,7 +18,16 @@ TODO Assets 共有ディスク => pub/media/upload
 TODO Cron
 TODO メール
 
-TODO WAF、ネットワーク防御
+TODO セキュリティ関連
+    TODO IAM
+    TODO ネットワーク, サブネット独立
+    TODO HTTP ロードバランサー経由
+    TODO SSH 不可
+    TODO コンテナ非公開
+    TODO Container-Optimized OS
+    TODO システムファイル書き込み不可設定（ACL？）
+    TODO fastly $0 or cloudflare $20 WAF / Google Cloud Armor (ベータ)
+
 TODO HTTPS
 TODO ドメイン紐付け
 TODO Magento アップデート運用
