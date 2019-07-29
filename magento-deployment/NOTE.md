@@ -17,7 +17,8 @@ TODO Assets 共有ディスク => pub/media/upload
     - Google Cloud Filestore => いけそう => 高すぎNG
     - 共有ディスクどうしよう問題 => NFSイメージ使うのが楽そう volume_nfs:0.8
 TODO Cron
-    - CronJobで設定できる
+    - CronJobでjobのpodを設定できる
+    - CronJob専用のイメージを用意した方が良さそう
 TODO メール
     - Mailgunを追加するのが良さそう
 

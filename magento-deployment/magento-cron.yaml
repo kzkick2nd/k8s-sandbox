@@ -1,0 +1,27 @@
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: magento-cron
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - image: asia.gcr.io/magento-gke/magento:3
+              name: magento
+              args:
+                - /usr/local/bin/php
+                - /var/www/html/bin/magento
+                - cron:run
+              volumeMounts:
+                - name: magento-env
+                  mountPath: /var/www/html/app/etc/env.php
+                  subPath: magento-env.php
+          restartPolicy: OnFailure
+          volumes:
+            - name: magento-env
+              configMap:
+                name: magento-env
