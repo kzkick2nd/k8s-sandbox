@@ -1,8 +1,12 @@
-
-
 TODO env.php 環境変数化
     - dev 環境
     - gke 環境
+        - getenv() 埋め込み OK
+        - pod 環境変数 埋め込み OK
+        - 環境変数の読み込み動作確認 OK
+            - gitignoreとdockerignoreは別制御
+            - 初期化コマンドによったら、env.php はなくてもいける？
+        - ConfigMap 置き換え
 
 TODO Assets 共有ディスク => pub/media/upload
     - 通常pvcディスク NG = 共有できない。中身消える recalim policy = delete <= 変更するにはpv作るところから
