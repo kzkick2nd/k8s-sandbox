@@ -36,6 +36,21 @@ TODO 開発環境 Docker 用に /app/etc/env.php のサンプルを用意（消�
 TODO アプリのデプロイ運用
 
 PEND init したのに database 空っぽ => 初期化コマンド必要？ => 二度目大丈夫だった謎。
+DONE /app/etc/ 対応
+    永続化 => 変化に耐えない
+    環境変数化 => ベターではないがとりあえずの手段
+    config map => ファイル読み込み版。試してみる
+        - config map --from-file 作成 OK
+            - kubectl create configmap magento-env --from-file=
+            - kubectl delete configmap magento-env
+        - deployments.yaml にconfigmap 作成（ファイル直指定できた） OK
+        - ログインして読み込み確認 OK
+        - subPath だと更新されない★
+            - "Note: A container using a ConfigMap as a subPath volume will not receive ConfigMap updates."
+        - 環境変数で渡すのがベスト => Magento でこれを行う方法を考える
+        - credentials あるので secret 使う方が良い
+            - kubectl create secret generic magento-env --from-file=
+            - すごい扱いにくい。やはり ConfigMap が良い
 DONE セッション OK、キャッシュ OK => redisを立ててenv.php => クラスターを組む場合どうしよう
 DONE バッチ運用 magento コマンド運用
     - サイト基本設定
