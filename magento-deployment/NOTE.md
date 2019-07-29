@@ -30,10 +30,17 @@ TODO セキュリティ関連 確認
     TODO ネットワーク, サブネット独立
     TODO HTTP ロードバランサー経由
     TODO SSH 不可
-    TODO コンテナ非公開
+    DONE コンテナ非公開
+        - Container Registry 非公開設定 => 非公開のままプロジェクト内アクセス可 OK
     TODO Container-Optimized OS
     TODO システムファイル書き込み不可設定（ACL？）
     TODO fastly $0 or cloudflare $20 WAF / Google Cloud Armor (ベータ)
+
+TODO CloudSQL の プロキシー接続
+    - 環境変数で env.php を用意するのが先 OK
+    - プロキシ化
+
+TODO イメージ最小化 1GB スタート
 
 TODO HTTPS
 TODO ドメイン紐付け
@@ -64,19 +71,22 @@ DONE /app/etc/ 対応
             - すごい扱いにくい。やはり ConfigMap が良い
 DONE セッション OK、キャッシュ OK => redisを立ててenv.php => クラスターを組む場合どうしよう
 DONE バッチ運用 magento コマンド運用
+    - 実行不能 No information is available: the Magento application is not installed. なぜ？
+        - env.php が入ってなかった
+    - schema の追加ができればOK
+        - SSH してコマンド直うち
+        - $ bin/magento setup:db-schema:upgrade
+        - $ bin/magento setup:db-data:upgrade
     - サイト基本設定
         - 最初のデータを入れるのだけコマンド必要？
+            - ログインしないと打ち込めず
         - $ bin/magento setup:store-config:set --base-url=
                 --language=ja_JP \
                 --currency=JPY \
                 --timezone=Asia/Tokyo \
                 --use-rewrites=1
-        - bin/magento admin:user:create --admin-user=admin --admin-password=!Dnut8hic --admin-email=aruga.kazuki@gmail.com --admin-firstname=kazuki --admin-lastname=aruga
+        - bin/magento admin:user:create --admin-user=admin --admin-password=dnut8hic --admin-email=aruga.kazuki@gmail.com --admin-firstname=kazuki --admin-lastname=aruga
         - $ bin/magento cache:flush
-    - schema の追加ができればOK
-        - SSH してコマンド直うち
-        - $ bin/magento setup:db-schema:upgrade
-        - $ bin/magento setup:db-data:upgrade
 DONE CloudSQL 置き換え
 DONE /app/etc/env.php の扱い => .dockerignoreで除外
 DONE Resource Requests の記載（magento, mysql）
@@ -112,6 +122,10 @@ cloudsql
 docker run -d IMAGE_NAME
 docker rm CONTAINER_NAME
 docker rmi REPO:TAG => タグ指定削除
+
+#### tag つけて push
+docker tag ImageName asia.gcr.io/magento-gke/magento:1
+docker push asia.gcr.io/magento-gke/magento:1
 
 #### サンプル magento setup コマンド
 bin/magento setup:install \
