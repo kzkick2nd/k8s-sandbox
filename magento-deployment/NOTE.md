@@ -10,15 +10,18 @@ TODO /app/etc/ 対応
         - ログインして読み込み確認 OK
         - subPath だと更新されない★
             - "Note: A container using a ConfigMap as a subPath volume will not receive ConfigMap updates."
+        - 環境変数で渡すのがベスト => Magento でこれを行う方法を考える
 
 TODO Assets 共有ディスク => pub/media/upload
     - 通常pvcディスク NG = 共有できない。中身消える recalim policy = delete <= 変更するにはpv作るところから
-    - Google Cloud Filestore => いけそう => 高すぎ
-    - 共有ディスクどうしよう問題 => NFS型使うか
+    - Google Cloud Filestore => いけそう => 高すぎNG
+    - 共有ディスクどうしよう問題 => NFSイメージ使うのが楽そう volume_nfs:0.8
 TODO Cron
+    - CronJobで設定できる
 TODO メール
+    - Mailgunを追加するのが良さそう
 
-TODO セキュリティ関連
+TODO セキュリティ関連 確認
     TODO IAM
     TODO ネットワーク, サブネット独立
     TODO HTTP ロードバランサー経由
@@ -37,7 +40,7 @@ TODO node-pool の node にどう分散するの？
 TODO 構成管理 Cloud Deployment Manager
 TODO GKE イメージ起動時になにかコマンド実行できるのか？
 TODO 開発環境 Docker 用に /app/etc/env.php のサンプルを用意（消滅時の復旧方法も必要）
-TODO アプリのデプロイ
+TODO アプリのデプロイ運用
 
 PEND init したのに database 空っぽ => 初期化コマンド必要？ => 二度目大丈夫だった謎。
 DONE セッション OK、キャッシュ OK => redisを立ててenv.php => クラスターを組む場合どうしよう
