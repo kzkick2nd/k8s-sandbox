@@ -1,16 +1,8 @@
 
-TODO /app/etc/ 対応
-    永続化 => 変化に耐えない
-    環境変数化 => ベターではないがとりあえずの手段
-    config map => ファイル読み込み版。試してみる
-        - config map --from-file 作成 OK
-            - kubectl create configmap magento-env --from-file=
-            - kubectl delete configmap magento-env
-        - deployments.yaml にconfigmap 作成（ファイル直指定できた） OK
-        - ログインして読み込み確認 OK
-        - subPath だと更新されない★
-            - "Note: A container using a ConfigMap as a subPath volume will not receive ConfigMap updates."
-        - 環境変数で渡すのがベスト => Magento でこれを行う方法を考える
+
+TODO env.php 環境変数化
+    - dev 環境
+    - gke 環境
 
 TODO Assets 共有ディスク => pub/media/upload
     - 通常pvcディスク NG = 共有できない。中身消える recalim policy = delete <= 変更するにはpv作るところから
