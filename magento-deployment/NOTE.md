@@ -12,9 +12,16 @@ TODO Assets 共有ディスク => pub/media/upload
     - 通常pvcディスク NG = 共有できない。中身消える recalim policy = delete <= 変更するにはpv作るところから
     - Google Cloud Filestore => いけそう => 高すぎNG
     - 共有ディスクどうしよう問題 => NFSイメージ使うのが楽そう volume_nfs:0.8
+
 TODO Cron
     - CronJobでjobのpodを設定できる
     - CronJob専用のイメージを用意した方が良さそう
+        - 初期設定を自動化しないと動かせない
+        - var/log に書き込もうとしてパーミッションエラーを起こしている
+            - ログ処理を前提に必要としているらしい。キツイな。
+        - [2019-07-29 09:06:52] setup-cron.ERROR: Your current PHP memory limit is 128M. Magento 2 requires it to be set to 756M or more. As a user with root privileges, edit your php.ini file to increase memory_limit. (The command php --ini tells you where it is located.) After that, restart your web server and try again. [] []
+        - php memory limit 756M に変更
+
 TODO メール
     - Mailgunを追加するのが良さそう
 
