@@ -35,56 +35,60 @@ TODO イメージ最小化 1GB スタート
     - && 削除
 
 ## GKE 設定追加
-TODO env.php 環境変数化
+TODO env.php の扱い
+    - 環境変数からの扱いにするか、ファイルをConfigMapで持つか
     - dev 環境
+        - docker compose の変数読み込みで対応できる
     - gke 環境
-        - getenv() 埋め込み OK
-        - pod 環境変数 埋め込み OK
-        - 環境変数の読み込み動作確認 OK
-            - gitignoreとdockerignoreは別制御
-            - 初期化コマンドによったら、env.php はなくてもいける？
+        - getenv() 埋め込み
+        - pod 環境変数 埋め込み
         - ConfigMap > 環境変数化
+    - 初期化処理やワークフローによればenv.phpを残す必要はなくなる
 
 TODO Assets 共有ディスク => pub/media/upload
-    - 通常pvcディスク NG = 共有できない。中身消える recalim policy = delete <= 変更するにはpv作るところから
-    - Google Cloud Filestore => いけそう => 高すぎNG
-    - 共有ディスクどうしよう問題 => NFSイメージ使うのが良さそう volume_nfs:0.8
+    - 通常pvcディスク NG = 共有できない・中身消える
+        - recalim policy = delete <= 変更するためには pv 作る必要あり
+    - Google Cloud Filestore => 高すぎNG
+    - 共有ディスク => NFSイメージ使うのが良さそう volume_nfs:0.8
 
 TODO Cron
     - CronJobでjobのpodを設定できる
-    - CronJob専用のイメージを用意した方が良さそう？
-        - 初期設定を自動化しないと動かせない？
-            - DB 共有
+    - CronJob専用のイメージを用意した方が良い？
+        - とてもめんどくさい
+        - 起動時に初期設定が必須になる
+            - DBの共有
             - 環境変数
         - var/log に書き込もうとしてパーミッションエラーを起こしている
-            - ログ処理の前段にファイル存在を必要としているらしい。キツイな。
-        - [2019-07-29 09:06:52] setup-cron.ERROR: Your current PHP memory limit is 128M. Magento 2 requires it to be set to 756M or more. As a user with root privileges, edit your php.ini file to increase memory_limit. (The command php --ini tells you where it is located.) After that, restart your web server and try again. [] []
-        - php memory limit 756M に変更
+            - cron 処理の前段にログファイルの存在を必要としているらしい。キツイな。
+        - cron実行にメモリ不足
+            - [2019-07-29 09:06:52] setup-cron.ERROR: Your current PHP memory limit is 128M. Magento 2 requires it to be set to 756M or more. As a user with root privileges, edit your php.ini file to increase memory_limit. (The command php --ini tells you where it is located.) After that, restart your web server and try again. [] []
+            - php memory limit 756M に変更が必要
 
 TODO メール
-    - Mailgun/Sendgrid via SMTP を追加するのが良さそう
+    - Mailgun/Sendgrid via SMTP を追加する
 
 TODO セキュリティ関連 確認
     TODO IAM
-    TODO ネットワーク, サブネット独立
-    TODO HTTP ロードバランサー経由
-    TODO SSH 不可
-    DONE コンテナ非公開
-        - Container Registry 非公開設定 => 非公開のままプロジェクト内アクセス可 OK
-    TODO Container-Optimized OS
-    TODO システムファイル書き込み不可設定（ACL？）
-    TODO fastly $0 or cloudflare $20 WAF / Google Cloud Armor (ベータ)
+    TODO HTTPS
+    TODO ネットワーク, サブネット指定
+    DONE コンテナ非公開 = Container Registry 非公開設定でもプロジェクト内は利用 OK
+    TODO システムファイル書き込み不可設定（パーミッションとACL）
+    TODO fastly or cloudflare WAF
+    TODO Google Cloud Armor WAF?
 
+TODO ドメイン紐付け手順の確認
 
-TODO HTTPS
-TODO ドメイン紐付け
-TODO Magento アップデート運用
-
-TODO 構成管理 Cloud Deployment Manager
+TODO 構成管理自動化 Cloud Deployment Manager
 TODO 開発環境 Docker 用 /app/etc/env.php のサンプルを用意（消滅時の復旧方法も必要）
+TODO GKE イメージ起動時になにかコマンド実行できるのか？
+TODO node-pool の node にどう分散するの？
+
+## 運用系（ある程度行ったら一回回してみる）
+TODO 初期化と継続開発
+TODO デザイン開発
+TODO モジュール開発
+TODO Magento アップデート運用
 TODO アプリのデプロイ運用フロー
-NOTE GKE イメージ起動時になにかコマンド実行できるのか？
-NOTE node-pool の node にどう分散するの？
 
 PEND init したのに database 空っぽ => 初期化コマンド必要？ => 二度目大丈夫だった謎。
 
