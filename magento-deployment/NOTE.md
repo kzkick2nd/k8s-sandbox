@@ -7,11 +7,13 @@
     - magento-cron deploy
     - nfs deploy
 
-## 予定作業
+## STEP
 nfs, smtp, elasticsearch 連携が出来て1ステップ
-dokcer コンテナ再構築で2ステップ
-deployment manager 構成して3ステップ
-github からビルドと監視ができて4ステップ
+dokcer コンテナ nginx 再構築で2ステップ
+job を構成して3ステップ
+deployment manager 構成して4ステップ
+github からビルドができて5ステップ
+監視ができて6ステップ
 
 ## Docker イメージ作業
 TODO Nginx 化
