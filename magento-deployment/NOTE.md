@@ -50,6 +50,11 @@ TODO Assets 共有ディスク => pub/media/upload
         - recalim policy = delete <= 変更するためには pv 作る必要あり
     - Google Cloud Filestore => 高すぎNG
     - 共有ディスク => NFSイメージ使うのが良さそう volume_nfs:0.8
+        - 起動共有 OK
+        - 構成イメージ APP mount => nfs pvc > nfs pv > nfs-sv > nfs-sv pvc
+        - nfs pvc で nfs-sv の IP を指定する箇所がある。ここをサービス名で取得できないか？
+            - dns 名が利用できる https://github.com/kubernetes/examples/blob/master/staging/volumes/nfs/nfs-pv.yaml
+            - nfs-server.default.svc.cluster.local
 
 TODO Cron
     - CronJobでjobのpodを設定できる
