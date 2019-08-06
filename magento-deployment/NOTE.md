@@ -14,15 +14,25 @@ deployment manager 構成して3ステップ
 github からビルドと監視ができて4ステップ
 
 ## Docker イメージ作業
-TODO Docker イメージのログ出力
-    - STDOUTでOK
-
-TODO イメージ最小化 1GB スタート
-    - マルチステージ化
-
 TODO Nginx 化
     - ジョブ化するならサーバーはオフにした方が適切
     - Nginx ポッドとの通信経路どうなる？
+        - socket 共有をよく見るが、ベターな方法なのか再度調査必要
+
+TODO Docker イメージのログ出力
+    - STDOUTへ動かしたいなら、既存 logger を上書きする必要ある
+    - https://devdocs.magento.com/guides/v2.3/config-guide/log/log-intro.html
+
+TODO bin/setup に頼らない初期化に
+    - 基礎イメージビルド
+    - composer コマンドを実行
+    - ローカルへマウント
+    - ※ デザイン編集、モジュール追加のワークフローを一回やって差分をみる
+    - commit push & pull 起動に対応
+
+TODO イメージ最小化 1GB スタート
+    - マルチビルド化
+    - && 削除
 
 ## GKE 設定追加
 TODO env.php 環境変数化
@@ -151,6 +161,7 @@ cloudsql
 docker run -d IMAGE_NAME
 docker rm CONTAINER_NAME
 docker rmi REPO:TAG => タグ指定削除
+asia.gcr.io/magento-gke/magento
 
 #### tag つけて push
 docker tag ImageName asia.gcr.io/magento-gke/magento:1
