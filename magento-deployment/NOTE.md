@@ -1,3 +1,30 @@
+## 手順
+- Docker イメージを push
+- CloudSQL を起動
+- GKE を起動
+    - 環境変数設定
+    - magento-app deploy
+    - magento-cron deploy
+    - nfs deploy
+
+## 予定作業
+nfs, smtp, elasticsearch 連携が出来て1ステップ
+dokcer コンテナ再構築で2ステップ
+deployment manager 構成して3ステップ
+github からビルドと監視ができて4ステップ
+
+## Docker イメージ作業
+TODO Docker イメージのログ出力
+    - STDOUTでOK
+
+TODO イメージ最小化 1GB スタート
+    - マルチステージ化
+
+TODO Nginx 化
+    - ジョブ化するならサーバーはオフにした方が適切
+    - Nginx ポッドとの通信経路どうなる？
+
+## GKE 設定追加
 TODO env.php 環境変数化
     - dev 環境
     - gke 環境
@@ -6,24 +33,26 @@ TODO env.php 環境変数化
         - 環境変数の読み込み動作確認 OK
             - gitignoreとdockerignoreは別制御
             - 初期化コマンドによったら、env.php はなくてもいける？
-        - ConfigMap 置き換え
+        - ConfigMap > 環境変数化
 
 TODO Assets 共有ディスク => pub/media/upload
     - 通常pvcディスク NG = 共有できない。中身消える recalim policy = delete <= 変更するにはpv作るところから
     - Google Cloud Filestore => いけそう => 高すぎNG
-    - 共有ディスクどうしよう問題 => NFSイメージ使うのが楽そう volume_nfs:0.8
+    - 共有ディスクどうしよう問題 => NFSイメージ使うのが良さそう volume_nfs:0.8
 
 TODO Cron
     - CronJobでjobのpodを設定できる
-    - CronJob専用のイメージを用意した方が良さそう
-        - 初期設定を自動化しないと動かせない
+    - CronJob専用のイメージを用意した方が良さそう？
+        - 初期設定を自動化しないと動かせない？
+            - DB 共有
+            - 環境変数
         - var/log に書き込もうとしてパーミッションエラーを起こしている
-            - ログ処理を前提に必要としているらしい。キツイな。
+            - ログ処理の前段にファイル存在を必要としているらしい。キツイな。
         - [2019-07-29 09:06:52] setup-cron.ERROR: Your current PHP memory limit is 128M. Magento 2 requires it to be set to 756M or more. As a user with root privileges, edit your php.ini file to increase memory_limit. (The command php --ini tells you where it is located.) After that, restart your web server and try again. [] []
         - php memory limit 756M に変更
 
 TODO メール
-    - Mailgunを追加するのが良さそう
+    - Mailgun/Sendgrid via SMTP を追加するのが良さそう
 
 TODO セキュリティ関連 確認
     TODO IAM
@@ -36,24 +65,24 @@ TODO セキュリティ関連 確認
     TODO システムファイル書き込み不可設定（ACL？）
     TODO fastly $0 or cloudflare $20 WAF / Google Cloud Armor (ベータ)
 
-TODO CloudSQL の プロキシー接続
-    - 環境変数で env.php を用意するのが先 OK
-    - プロキシ化
-
-TODO イメージ最小化 1GB スタート
 
 TODO HTTPS
 TODO ドメイン紐付け
 TODO Magento アップデート運用
 
-TODO Dockerfile で magento2 エラーログ吐き出す場所指定？
-TODO node-pool の node にどう分散するの？
 TODO 構成管理 Cloud Deployment Manager
-TODO GKE イメージ起動時になにかコマンド実行できるのか？
-TODO 開発環境 Docker 用に /app/etc/env.php のサンプルを用意（消滅時の復旧方法も必要）
-TODO アプリのデプロイ運用
+TODO 開発環境 Docker 用 /app/etc/env.php のサンプルを用意（消滅時の復旧方法も必要）
+TODO アプリのデプロイ運用フロー
+NOTE GKE イメージ起動時になにかコマンド実行できるのか？
+NOTE node-pool の node にどう分散するの？
 
 PEND init したのに database 空っぽ => 初期化コマンド必要？ => 二度目大丈夫だった謎。
+
+---
+
+DONE CloudSQL の プロキシー接続
+    - 環境変数で env.php を用意するのが先 OK
+    - プロキシ化ではなく閉じたVPC peering にプライベート接続でOK
 DONE /app/etc/ 対応
     永続化 => 変化に耐えない
     環境変数化 => ベターではないがとりあえずの手段
