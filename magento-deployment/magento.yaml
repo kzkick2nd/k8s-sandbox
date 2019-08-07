@@ -33,7 +33,7 @@ spec:
         tier: frontend
     spec:
       containers:
-        - image: asia.gcr.io/magento-gke-248206/magento:2
+        - image: asia.gcr.io/magento-gke-248206/magento:1
           name: magento
           resources:
             requests:
