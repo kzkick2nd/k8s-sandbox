@@ -46,17 +46,8 @@ TODO env.php の扱い
         - pod 環境変数 埋め込み
         - ConfigMap > 環境変数化
     - 初期化処理やワークフローによればenv.phpを残す必要はなくなる
-
-TODO Assets 共有ディスク => pub/media/upload
-    - 通常pvcディスク NG = 共有できない・中身消える
-        - recalim policy = delete <= 変更するためには pv 作る必要あり
-    - Google Cloud Filestore => 高すぎNG
-    - 共有ディスク => NFSイメージ使うのが良さそう volume_nfs:0.8
-        - 起動共有 OK
-        - 構成イメージ APP mount => nfs pvc > nfs pv > nfs-sv > nfs-sv pvc
-        - nfs pvc で nfs-sv の IP を指定する箇所がある。ここをサービス名で取得できないか？
-            - dns 名が利用できる https://github.com/kubernetes/examples/blob/master/staging/volumes/nfs/nfs-pv.yaml
-            - nfs-server.default.svc.cluster.local
+    - 自動設定されている環境変数
+        - REDIS_MASTER_SERVICE_HOST
 
 TODO Cron
     - CronJobでjobのpodを設定できる
@@ -71,8 +62,17 @@ TODO Cron
             - [2019-07-29 09:06:52] setup-cron.ERROR: Your current PHP memory limit is 128M. Magento 2 requires it to be set to 756M or more. As a user with root privileges, edit your php.ini file to increase memory_limit. (The command php --ini tells you where it is located.) After that, restart your web server and try again. [] []
             - php memory limit 756M に変更が必要
 
-TODO メール
-    - Mailgun/Sendgrid via SMTP を追加する
+WIP メール
+    - Sendgrid via SMTP
+        - 標準機能になかった
+        - mageplaza SMTP 拡張を利用する https://www.mageplaza.com/magento-2-smtp/
+            - インストールする運用に対応できてない
+    - Sendgrid via API(Magento module)
+        - MarketPlace で購入 https://sendgrid.com/docs/for-developers/partners/magento/
+        - composer require
+            - auth 必要
+            - php 5.6系に依存してる
+            - 2.2 に依存していて使えない
 
 TODO セキュリティ関連 確認
     TODO IAM
@@ -100,6 +100,23 @@ TODO アプリのデプロイ運用フロー
 PEND init したのに database 空っぽ => 初期化コマンド必要？ => 二度目大丈夫だった謎。
 
 ---
+DONE Elasticsearch
+    - 月$17のマネージド・サービス
+    - 接続情報はDBに含まれている
+    - 管理画面かコマンドラインで設定する
+    - 疎通確認 OK
+    - $ bin/magento indexer:reindex
+
+DONE Assets 共有ディスク => pub/media/upload
+    - 通常pvcディスク NG = 共有できない・中身消える
+        - recalim policy = delete <= 変更するためには pv 作る必要あり
+    - Google Cloud Filestore => 高すぎNG
+    - 共有ディスク => NFSイメージ使うのが良さそう volume_nfs:0.8
+        - 起動共有 OK
+        - 構成イメージ APP mount => nfs pvc > nfs pv > nfs-sv > nfs-sv pvc
+        - nfs pvc で nfs-sv の IP を指定する箇所がある。ここをサービス名で取得できないか？
+            - dns 名が利用できる https://github.com/kubernetes/examples/blob/master/staging/volumes/nfs/nfs-pv.yaml
+            - nfs-server.default.svc.cluster.local
 
 DONE CloudSQL の プロキシー接続
     - 環境変数で env.php を用意するのが先 OK
@@ -130,12 +147,12 @@ DONE バッチ運用 magento コマンド運用
     - サイト基本設定
         - 最初のデータを入れるのだけコマンド必要？
             - ログインしないと打ち込めず
-        - $ bin/magento setup:store-config:set --base-url=
+        - $ bin/magento setup:store-config:set --base-url=http://34.85.77.76/ \
                 --language=ja_JP \
                 --currency=JPY \
                 --timezone=Asia/Tokyo \
                 --use-rewrites=1
-        - bin/magento admin:user:create --admin-user=admin --admin-password=dnut8hic --admin-email=aruga.kazuki@gmail.com --admin-firstname=kazuki --admin-lastname=aruga
+        - $ bin/magento admin:user:create --admin-user=admin --admin-password=dnut8hic --admin-email=aruga.kazuki@gmail.com --admin-firstname=kazuki --admin-lastname=aruga
         - $ bin/magento cache:flush
 DONE CloudSQL 置き換え
 DONE /app/etc/env.php の扱い => .dockerignoreで除外
@@ -180,7 +197,7 @@ docker push asia.gcr.io/magento-gke/magento:1
 
 #### サンプル magento setup コマンド
 bin/magento setup:install \
---base-url=http:// \
+--base-url=http://34.85.77.76/ \
 --db-host= \
 --db-name=magento \
 --db-user=root \
