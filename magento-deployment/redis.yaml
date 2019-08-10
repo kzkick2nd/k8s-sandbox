@@ -35,10 +35,10 @@ spec:
     spec:
       containers:
       - name: master
-        image: k8s.gcr.io/redis:e2e
+        image: mirror.gcr.io/library/redis:5.0.5-alpine
         resources:
           requests:
-            memory: 256Mi
+            memory: 512Mi
             cpu: 100m
         ports:
         - containerPort: 6379
