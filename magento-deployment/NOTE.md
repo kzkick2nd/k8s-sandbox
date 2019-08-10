@@ -16,16 +16,16 @@ github からビルドができて5ステップ
 監視ができて6ステップ
 
 ## Docker イメージ作業
-TODO Docker イメージのログ出力
-    - STDOUTへ動かしたいなら、既存 logger を上書きする必要ある
-    - https://devdocs.magento.com/guides/v2.3/config-guide/log/log-intro.html
-
 TODO bin/setup に頼らない初期化に
     - 基礎イメージビルド
     - composer コマンドを実行
     - ローカルへマウント
     - ※ デザイン編集、モジュール追加のワークフローを一回やって差分をみる
     - commit push & pull 起動に対応
+
+TODO Docker イメージのログ出力
+    - STDOUTへ動かしたいなら、既存 logger を上書きする必要ある
+    - https://devdocs.magento.com/guides/v2.3/config-guide/log/log-intro.html
 
 TODO イメージ最小化 1GB スタート
     - マルチビルド化
@@ -69,6 +69,10 @@ WIP メール
             - auth 必要
             - php 5.6系に依存してる
             - 2.2 に依存していて使えない
+
+TODO Varnish
+    - GCR にイメージなし（ミラーも見当たらず）
+    - 独自に pull して用意するしかないかな
 
 TODO ElasticSearch 初期化コマンド
     - 接続先を含めて初期化が必要?（DBに記載するから初期実行でも良い気がするけど）
