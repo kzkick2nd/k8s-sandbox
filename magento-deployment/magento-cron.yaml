@@ -8,31 +8,16 @@ spec:
     spec:
       template:
         spec:
+          restartPolicy: OnFailure
           containers:
             - image: asia.gcr.io/magento-gke-248206/magento:1
               name: magento
               resources:
                 requests:
                   memory: 756Mi
-                  cpu: 200m
+                  cpu: 100m
               command:
                 - /usr/local/bin/php
               args:
                 - /var/www/html/bin/magento
-                - setup:cron:run
-              env:
-                - name: MAGENTO_DB_HOST
-                  value: ""
-                - name: MAGENTO_DB_USER
-                  value: "root"
-                - name: MAGENTO_DB_PASSWORD
-                  value: "password"
-                - name: MAGENTO_REDIS_HOST
-                  value: ""
-                volumeMounts:
-                  - name: varlog
-                    mountPath: /var/www/html/var/log/update.log
-          restartPolicy: OnFailure
-          volumes:
-            - name: varlog
-              emptyDir: {}
+                - list
