@@ -15,8 +15,9 @@ spec:
                 requests:
                   memory: 756Mi
                   cpu: 200m
-              args:
+              command:
                 - /usr/local/bin/php
+              args:
                 - /var/www/html/bin/magento
                 - setup:cron:run
               env:
@@ -28,9 +29,9 @@ spec:
                   value: "password"
                 - name: MAGENTO_REDIS_HOST
                   value: ""
-              volumeMounts:
-                - name: varlog
-                  mountPath: /var/www/html/var/log/update.log
+                volumeMounts:
+                  - name: varlog
+                    mountPath: /var/www/html/var/log/update.log
           restartPolicy: OnFailure
           volumes:
             - name: varlog
