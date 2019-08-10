@@ -8,19 +8,14 @@
     - nfs deploy
 
 ## STEP
-nfs, smtp, elasticsearch 連携が出来て1ステップ
-dokcer コンテナ nginx 再構築で2ステップ
+nfs OK, smtp, elasticsearch OK, varnish 連携が出来て1ステップ
+dokcer コンテナ再構成で2ステップ
 job を構成して3ステップ
 deployment manager 構成して4ステップ
 github からビルドができて5ステップ
 監視ができて6ステップ
 
 ## Docker イメージ作業
-TODO Nginx 化
-    - ジョブ化するならサーバーはオフにした方が適切
-    - Nginx ポッドとの通信経路どうなる？
-        - socket 共有をよく見るが、ベターな方法なのか再度調査必要
-
 TODO Docker イメージのログ出力
     - STDOUTへ動かしたいなら、既存 logger を上書きする必要ある
     - https://devdocs.magento.com/guides/v2.3/config-guide/log/log-intro.html
@@ -53,6 +48,7 @@ TODO Cron
     - CronJobでjobのpodを設定できる
     - CronJob専用のイメージを用意した方が良い？
         - とてもめんどくさい
+            - Apache を切ってコンテナ起動で代替
         - 起動時に初期設定が必須になる
             - DBの共有
             - 環境変数
@@ -73,6 +69,9 @@ WIP メール
             - auth 必要
             - php 5.6系に依存してる
             - 2.2 に依存していて使えない
+
+TODO ElasticSearch 初期化コマンド
+    - 接続先を含めて初期化が必要?（DBに記載するから初期実行でも良い気がするけど）
 
 TODO セキュリティ関連 確認
     TODO IAM
@@ -100,6 +99,10 @@ TODO アプリのデプロイ運用フロー
 PEND init したのに database 空っぽ => 初期化コマンド必要？ => 二度目大丈夫だった謎。
 
 ---
+DONE web, app 分割
+    - ジョブ化するなら Apache プロセスは不要
+    - CMD 上書きで対応する OK
+
 DONE Elasticsearch
     - 月$17のマネージド・サービス
     - 接続情報はDBに含まれている
