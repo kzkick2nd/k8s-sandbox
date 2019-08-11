@@ -38,7 +38,7 @@ spec:
         image: mirror.gcr.io/library/redis:5.0.5-alpine
         resources:
           requests:
-            memory: 512Mi
+            memory: 256Mi
             cpu: 100m
         ports:
         - containerPort: 6379
