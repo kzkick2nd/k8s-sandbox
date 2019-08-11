@@ -14,7 +14,7 @@ spec:
               name: magento
               resources:
                 requests:
-                  memory: 756Mi
+                  memory: 256Mi
                   cpu: 100m
               command:
                 - /usr/local/bin/php
