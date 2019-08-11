@@ -49,8 +49,6 @@ spec:
               value: "root"
             - name: MAGENTO_DB_PASSWORD
               value: "password"
-            - name: MAGENTO_REDIS_HOST
-              value: "10.4.12.169"
           volumeMounts:
             - name: nfs-pvc
               mountPath: /var/www/html/pub/media/upload
