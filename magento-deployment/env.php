@@ -34,7 +34,7 @@ return [
     'session' => [
         'save' => 'redis',
         'redis' => [
-            'host' => getenv('MAGENTO_REDIS_HOST'),
+            'host' => getenv('REDIS_MASTER_SERVICE_HOST'),
             'port' => '6379',
             'password' => '',
             'timeout' => '2.5',
@@ -59,7 +59,7 @@ return [
             'default' => [
                 'backend' => 'Cm_Cache_Backend_Redis',
                 'backend_options' => [
-                    'server' => getenv('MAGENTO_REDIS_HOST'),
+                    'server' => getenv('REDIS_MASTER_SERVICE_HOST'),
                     'database' => '0',
                     'port' => '6379'
                 ],
@@ -67,7 +67,7 @@ return [
             'page_cache' => [
                 'backend' => 'Cm_Cache_Backend_Redis',
                 'backend_options' => [
-                    'server' => getenv('MAGENTO_REDIS_HOST'),
+                    'server' => getenv('REDIS_MASTER_SERVICE_HOST'),
                     'port' => '6379',
                     'database' => '1',
                     'compress_data' => '0'
