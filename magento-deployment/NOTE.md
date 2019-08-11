@@ -73,6 +73,9 @@ WIP メール
 TODO Varnish
     - GCR にイメージなし（ミラーも見当たらず）
     - 独自に pull して用意するしかないかな
+        - [Magento2 with Varnish — Varnish Wiki documentation](https://www.varnish-software.com/wiki/content/tutorials/magento2/index.html)
+        - [Configure and use Varnish | Magento 2 Developer Documentation](https://devdocs.magento.com/guides/v2.3/config-guide/varnish/config-varnish.html)
+        - [Varnish in Magento 2 [Basic Settings & Practical Use]](https://amasty.com/blog/use-varnish-with-magento-2-for-better-end-user-experience/)
 
 TODO ElasticSearch 初期化コマンド
     - 接続先を含めて初期化が必要?（DBに記載するから初期実行でも良い気がするけど）
