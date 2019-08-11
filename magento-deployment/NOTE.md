@@ -8,9 +8,9 @@
     - nfs deploy
 
 ## STEP
-nfs OK, smtp, elasticsearch OK, varnish 連携が出来て1ステップ
+nfs OK, smtp OK, elasticsearch OK 連携が出来て1ステップ
 dokcer コンテナ再構成で2ステップ
-job を構成して3ステップ
+CronJob を構成して3ステップ
 deployment manager 構成して4ステップ
 github からビルドができて5ステップ
 監視ができて6ステップ
@@ -20,8 +20,13 @@ TODO bin/setup に頼らない初期化に
     - 基礎イメージビルド
     - composer コマンドを実行
     - ローカルへマウント
+    - env.php ファイルの扱いどうするか環境変数から渡すのが吉
+        - entrypoint.sh で環境変数から置き換えるのが良さそう
+        - https://dev.classmethod.jp/cloud/creds-design-pattern-in-docker/
     - ※ デザイン編集、モジュール追加のワークフローを一回やって差分をみる
+        - 開発 => ビルド => push
     - commit push & pull 起動に対応
+    - メモリ足りてない
 
 TODO Docker イメージのログ出力
     - STDOUTへ動かしたいなら、既存 logger を上書きする必要ある
@@ -58,27 +63,14 @@ TODO Cron
             - [2019-07-29 09:06:52] setup-cron.ERROR: Your current PHP memory limit is 128M. Magento 2 requires it to be set to 756M or more. As a user with root privileges, edit your php.ini file to increase memory_limit. (The command php --ini tells you where it is located.) After that, restart your web server and try again. [] []
             - php memory limit 756M に変更が必要
 
-WIP メール
-    - Sendgrid via SMTP
-        - 標準機能になかった
-        - mageplaza SMTP 拡張を利用する https://www.mageplaza.com/magento-2-smtp/
-            - インストールする運用に対応できてない
-    - Sendgrid via API(Magento module)
-        - MarketPlace で購入 https://sendgrid.com/docs/for-developers/partners/magento/
-        - composer require
-            - auth 必要
-            - php 5.6系に依存してる
-            - 2.2 に依存していて使えない
-
-TODO Varnish
-    - GCR にイメージなし（ミラーも見当たらず）
-    - 独自に pull して用意するしかないかな
-        - [Magento2 with Varnish — Varnish Wiki documentation](https://www.varnish-software.com/wiki/content/tutorials/magento2/index.html)
-        - [Configure and use Varnish | Magento 2 Developer Documentation](https://devdocs.magento.com/guides/v2.3/config-guide/varnish/config-varnish.html)
-        - [Varnish in Magento 2 [Basic Settings & Practical Use]](https://amasty.com/blog/use-varnish-with-magento-2-for-better-end-user-experience/)
-
 TODO ElasticSearch 初期化コマンド
     - 接続先を含めて初期化が必要?（DBに記載するから初期実行でも良い気がするけど）
+
+TODO GKE の操作方法
+    - CloudShell がベターだとは思う
+
+TODO GKE パフォーマンス
+    - レプリカ数一つでもいいかも
 
 TODO セキュリティ関連 確認
     TODO IAM
@@ -104,8 +96,35 @@ TODO Magento アップデート運用
 TODO アプリのデプロイ運用フロー
 
 PEND init したのに database 空っぽ => 初期化コマンド必要？ => 二度目大丈夫だった謎。
+PEND Varnish
+    - GKE 構成で Vanish 扱うの難しい（キャッシュをノードごとに配置することに）
+        - HAProxy の方がいいかもな
+    - GCR にイメージなし（ミラーも見当たらず）
+    - 独自に pull して用意するしかないかな
+        - [Magento2 with Varnish — Varnish Wiki documentation](https://www.varnish-software.com/wiki/content/tutorials/magento2/index.html)
+        - [Configure and use Varnish | Magento 2 Developer Documentation](https://devdocs.magento.com/guides/v2.3/config-guide/varnish/config-varnish.html)
+        - [Varnish in Magento 2 [Basic Settings & Practical Use]](https://amasty.com/blog/use-varnish-with-magento-2-for-better-end-user-experience/)
+    - とりあえずイメージ用意だけできた
 
 ---
+DONE メール
+    - Sendgrid via SMTP
+        - 標準機能になかった
+        - mageplaza SMTP 拡張を利用する https://www.mageplaza.com/magento-2-smtp/
+            - インストールして運用に対応できてない
+            - mageplaza のアカウント情報が必要
+    - SMTP エラー出てて使えない
+        - https://github.com/magento/magento2/issues/20033
+        - https://github.com/magento/magento2/issues/23645
+    - Sendgrid via API(Magento module)
+        - MarketPlace で購入 https://sendgrid.com/docs/for-developers/partners/magento/
+        - composer require
+            - auth 必要
+            - php 5.6系に依存してる
+            - 2.2 に依存していて使えない
+        - SendGrid 公式の拡張について連絡してみる
+        - SendGrid 拡張のソースをゲットして修正する？
+
 DONE web, app 分割
     - ジョブ化するなら Apache プロセスは不要
     - CMD 上書きで対応する OK
@@ -157,13 +176,12 @@ DONE バッチ運用 magento コマンド運用
     - サイト基本設定
         - 最初のデータを入れるのだけコマンド必要？
             - ログインしないと打ち込めず
-        - $ bin/magento setup:store-config:set --base-url=http://34.85.77.76/ \
-                --language=ja_JP \
-                --currency=JPY \
-                --timezone=Asia/Tokyo \
-                --use-rewrites=1
+        - $ bin/magento setup:store-config:set --base-url=http://34.85.107.58/ --language=ja_JP --currency=JPY --timezone=Asia/Tokyo --use-rewrites=1
         - $ bin/magento admin:user:create --admin-user=admin --admin-password=dnut8hic --admin-email=aruga.kazuki@gmail.com --admin-firstname=kazuki --admin-lastname=aruga
         - $ bin/magento cache:flush
+        - production
+            - php -d memory_limit=-1 bin/magento setup:static-content:deploy -f ja_JP
+            - https://devdocs.magento.com/guides/v2.3/config-guide/cli/config-cli-subcommands-static-view.html
 DONE CloudSQL 置き換え
 DONE /app/etc/env.php の扱い => .dockerignoreで除外
 DONE Resource Requests の記載（magento, mysql）
