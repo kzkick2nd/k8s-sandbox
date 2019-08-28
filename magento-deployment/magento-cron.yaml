@@ -8,7 +8,7 @@ spec:
     spec:
       template:
         spec:
-          restartPolicy: OnFailure
+          restartPolicy: Never
           containers:
             - image: asia.gcr.io/magento-gke-248206/magento:1
               name: magento
