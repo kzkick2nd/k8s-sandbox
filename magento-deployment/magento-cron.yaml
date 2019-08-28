@@ -21,3 +21,27 @@ spec:
               args:
                 - /var/www/html/bin/magento
                 - list
+              # following settings are the same as the App pod
+              lifecycle:
+                postStart:
+                  exec:
+                    # Share static cache dir to all pods.
+                    command:
+                      - sh
+                      - -c
+                      - "cp -f /var/www/html/pub/static/.htaccess /var/www/html/pub/nfs_static \
+                        && rm -rf /var/www/html/pub/static \
+                        && ln -sf /var/www/html/pub/nfs_static /var/www/html/pub/static \
+                        && chown -R www-data:www-data /var/www/html/pub/static /var/www/html/pub/nfs_static"
+              volumeMounts:
+                - name: nfs-upload-pvc
+                  mountPath: /var/www/html/pub/media/upload
+                - name: nfs-static-pvc
+                  mountPath: /var/www/html/pub/nfs_static
+          volumes:
+            - name: nfs-upload-pvc
+              persistentVolumeClaim:
+                claimName: nfs-upload-pvc
+            - name: nfs-static-pvc
+              persistentVolumeClaim:
+                claimName: nfs-static-pvc
