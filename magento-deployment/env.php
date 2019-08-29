@@ -4,14 +4,14 @@ return [
         'frontName' => 'admin'
     ],
     'crypt' => [
-        'key' => '2d9337b2b95bed0f434cc777b8407e6f'
+        'key' => ''
     ],
     'db' => [
         'table_prefix' => '',
         'connection' => [
             'default' => [
                 'host' => getenv('MAGENTO_DB_HOST'),
-                'dbname' => 'magento',
+                'dbname' => getenv('MAGENTO_DB_NAME'),
                 'username' => getenv('MAGENTO_DB_USER'),
                 'password' => getenv('MAGENTO_DB_PASSWORD'),
                 'model' => 'mysql4',
@@ -99,6 +99,6 @@ return [
         'vertex' => 1
     ],
     'install' => [
-        'date' => 'Tue, 06 Aug 2019 05:48:16 +0000'
+        'date' => 'Tue, 27 Aug 2019 00:00:00 +0000'
     ]
 ];
