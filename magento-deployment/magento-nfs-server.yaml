@@ -19,6 +19,8 @@ metadata:
   name: nfs-server
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       role: nfs-server
@@ -27,9 +29,18 @@ spec:
       labels:
         role: nfs-server
     spec:
+      securityContext:
+        # runAsUser: 33
+        runAsGroup: 33
+        fsGroup: 33
       containers:
         - name: nfs-server
           image: k8s.gcr.io/volume-nfs:0.8
+          resources:
+            requests:
+              memory: 256Mi
+          securityContext:
+            privileged: true
           ports:
             - name: nfs
               containerPort: 2049
@@ -37,15 +48,13 @@ spec:
               containerPort: 20048
             - name: rpcbind
               containerPort: 111
-          securityContext:
-            privileged: true
           lifecycle:
             postStart:
               exec:
                 command:
                   - sh
                   - -c
-                  - 'mkdir -p /exports/upload/ /exports/static/'
+                  - "mkdir -p -m 775 /exports/upload/ /exports/static/ /exports/generated/ /exports/view_preprocessed/ /exports/etc/"
           volumeMounts:
             - name: nfs-server-pvc
               mountPath: /exports
