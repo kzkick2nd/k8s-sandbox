@@ -7,7 +7,9 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 80
+    - name: http
+      port: 80
+      targetPort: 8080
   selector:
     app: magento
     tier: frontend
@@ -20,35 +22,35 @@ metadata:
     app: magento
 spec:
   replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 0%
   selector:
     matchLabels:
       app: magento
       tier: frontend
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
         app: magento
         tier: frontend
     spec:
+      securityContext:
+        runAsUser: 33
+        runAsGroup: 33
+        fsGroup: 33
       containers:
-        - image: asia.gcr.io/magento-gke-248206/magento:1
+        - image: asia.gcr.io/magento-gke-248206/magento:3
           name: magento
           resources:
             requests:
               memory: 756Mi
               cpu: 200m
           ports:
-            - containerPort: 80
-              name: magento
-          env:
-            - name: MAGENTO_DB_HOST
-              value: "10.125.192.3"
-            - name: MAGENTO_DB_USER
-              value: "root"
-            - name: MAGENTO_DB_PASSWORD
-              value: ""
+            - name: http
+              containerPort: 8080
           lifecycle:
             postStart:
               exec:
@@ -56,16 +58,33 @@ spec:
                 command:
                   - sh
                   - -c
-                  - "cp -f /var/www/html/pub/static/.htaccess /var/www/html/pub/nfs_static \
+                  - "rm -rf /var/www/html/app/etc \
+                    && ln -sf /var/www/html/app/nfs_etc /var/www/html/app/etc \
+                    && rm -rf /var/www/html/generated \
+                    && ln -sf /var/www/html/nfs_generated /var/www/html/generated \
                     && rm -rf /var/www/html/pub/static \
-                    && ln -sf /var/www/html/pub/nfs_static /var/www/html/pub/static \
-                    && chown -R www-data:www-data /var/www/html/pub/static /var/www/html/pub/nfs_static"
+                    && ln -sf /var/www/html/pub/nfs_static /var/www/html/pub/static"
           volumeMounts:
+            - name: nfs-generated-pvc
+              mountPath: /var/www/html/nfs_generated
+            - name: nfs-view-preprocessed-pvc
+              mountPath: /var/www/html/var/view_preprocessed
+            - name: nfs-etc-pvc
+              mountPath: /var/www/html/app/nfs_etc
             - name: nfs-upload-pvc
               mountPath: /var/www/html/pub/media/upload
             - name: nfs-static-pvc
               mountPath: /var/www/html/pub/nfs_static
       volumes:
+        - name: nfs-generated-pvc
+          persistentVolumeClaim:
+            claimName: nfs-generated-pvc
+        - name: nfs-view-preprocessed-pvc
+          persistentVolumeClaim:
+            claimName: nfs-view-preprocessed-pvc
+        - name: nfs-etc-pvc
+          persistentVolumeClaim:
+            claimName: nfs-etc-pvc
         - name: nfs-upload-pvc
           persistentVolumeClaim:
             claimName: nfs-upload-pvc
