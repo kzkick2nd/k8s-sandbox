@@ -1,6 +1,99 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  name: nfs-etc-pvc
+spec:
+  selector:
+    matchLabels:
+      type: nfs-etc-pv
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs
+  resources:
+    requests:
+      storage: 64Mi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-etc-pv
+  labels:
+    type: nfs-etc-pv
+spec:
+  capacity:
+    storage: 64Mi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs
+  nfs:
+    server: nfs-server.default.svc.cluster.local
+    path: /etc/
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-view-preprocessed-pvc
+spec:
+  selector:
+    matchLabels:
+      type: nfs-view-preprocessed-pv
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-view-preprocessed-pv
+  labels:
+    type: nfs-view-preprocessed-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs
+  nfs:
+    server: nfs-server.default.svc.cluster.local
+    path: /view_preprocessed/
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-generated-pvc
+spec:
+  selector:
+    matchLabels:
+      type: nfs-generated-pv
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-generated-pv
+  labels:
+    type: nfs-generated-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs
+  nfs:
+    server: nfs-server.default.svc.cluster.local
+    path: /generated/
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
   name: nfs-static-pvc
 spec:
   selector:
@@ -11,7 +104,7 @@ spec:
   storageClassName: nfs
   resources:
     requests:
-      storage: 4Gi
+      storage: 2Gi
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -21,7 +114,7 @@ metadata:
     type: nfs-static-pv
 spec:
   capacity:
-    storage: 4Gi
+    storage: 2Gi
   accessModes:
     - ReadWriteMany
   storageClassName: nfs
@@ -42,7 +135,7 @@ spec:
   storageClassName: nfs
   resources:
     requests:
-      storage: 4Gi
+      storage: 2Gi
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -52,7 +145,7 @@ metadata:
     type: nfs-upload-pv
 spec:
   capacity:
-    storage: 4Gi
+    storage: 2Gi
   accessModes:
     - ReadWriteMany
   storageClassName: nfs
