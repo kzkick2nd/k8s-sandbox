@@ -7,18 +7,93 @@
     - magento-cron deploy
     - nfs deploy
 
+## NOTE
+www-data でコンテナ起動 OK
+www-data で NFS マウント OK（Groupでなら）
+nfs-server 実行ユーザー root じゃないとマウントできない
+nfs-server の特権について理解したい
+NFS クラスター OK
+Init コンテナでNFSに各キャッシュ注入 OK
+    - setup
+    - redis
+    - base-url
+APP コンテナ3起動 NFS マウント OK
+
+Admin コンテナ1起動 NFS マウント
+    - cron いり
+    - admin 専用
+    - App コンテナの管理画面潰す
+APP production
+deploy:mode:set produciton
+=> アクセス中は処理できない
+setup:static-content:deploy ja_JP
+=> 画面真っ白
+APP Magento log => STDOUT
+redis レプリケーション2 + sentinel 3起動
+	=> kubernetes/examples 利用
+
 ## STEP
-nfs OK, smtp OK, elasticsearch OK 連携が出来て1ステップ
-dokcer コンテナ再構成で2ステップ
-CronJob を構成して3ステップ
-deployment manager 構成して4ステップ
-github からビルドができて5ステップ
+OK nfs OK, SendGrid OK, elasticsearch OK 連携が出来て1ステップ
+OK CronJob を構成して2ステップ
+OK dokcer コンテナ再構成で3ステップ
+deployment yaml 構成して4ステップ
+    - 初期化コマンドを実行しなければならない
+    - 実行ユーザーを www-data にしなければならない
+deployment manager 構成して5ステップ
+github からビルドができて6ステップ
 監視ができて6ステップ
+
+https://devdocs.magento.com/guides/v2.3/config-guide/redis/config-redis.html
+
+bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=10.4.0.223 --cache-backend-redis-db=0
+
+bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=10.4.0.223 --page-cache-redis-db=1
+
+bin/magento setup:config:set --session-save=redis --session-save-redis-host=10.4.0.223 --session-save-redis-log-level=3 --session-save-redis-db=2
+
+bin/magento setup:store-config:set --base-url="http://localhost:8080/"
+
+## TODO NOTE
+stdout,stderror 拡張
+SendGrid 拡張
+複数台のときの Cache 類の制御どうしよう
+    - NFS でシェアしちゃう
+実行ユーザーの un-root 化
+redis-masterにslave追加した方がいいかも？
+CronJob で実行は不安定になる
+    nfs 接続時に何か起きてる？
+    admin コンテナで cron 回した方がいいかも
+nfs-server はサイドカーの方が良いかも？
+    サイドカーの再デプロイ時はどうなる？
+            capabilities:
+              add:
+                - DAC_READ_SEARCH
+                - SYS_RESOURCE
+    app/etc/env.php 環境変数化
+    app/etc
+        config.php が増える
+    pub/static
+        frontend, adminhtml が増える
+    pub/media/upload
+        - TODO: ユーザーパーミッション
+    pub/static
+        - TODO: ユーザーパーミッション
+        - NFS 共有 OK
+        - htaccess 設置 OK
+            - 1 nfs_static/ に htaccess をコピーする
+            - 2 static/ を削除する
+            - 3 nfs_static/ を static/ にリンクする
+    NFSマウント検討
+        generated => ln マウント OK
+        app/etc => ln マウント OK
+        pub/static => ln マウント OK
+        var/view_preprocessed => 直接マウント OK
+        pub/media/upload => 直接マウント OK
 
 ## Docker イメージ作業
 TODO bin/setup に頼らない初期化に
-    - 基礎イメージビルド
-    - composer コマンドを実行
+    - 基礎イメージビルド OK
+    - composer コマンドを実行 OK
     - ローカルへマウント
     - env.php ファイルの扱いどうするか環境変数から渡すのが吉
         - entrypoint.sh で環境変数から置き換えるのが良さそう
@@ -27,14 +102,11 @@ TODO bin/setup に頼らない初期化に
         - 開発 => ビルド => push
     - commit push & pull 起動に対応
     - メモリ足りてない
+        - php.ini 756
 
 TODO Docker イメージのログ出力
     - STDOUTへ動かしたいなら、既存 logger を上書きする必要ある
     - https://devdocs.magento.com/guides/v2.3/config-guide/log/log-intro.html
-
-TODO イメージ最小化 1GB スタート
-    - マルチビルド化
-    - && 削除
 
 ## GKE 設定追加
 TODO env.php の扱い
@@ -70,7 +142,7 @@ TODO GKE の操作方法
     - CloudShell がベターだとは思う
 
 TODO GKE パフォーマンス
-    - レプリカ数一つでもいいかも
+    - レプリカ数一つでもいいかも？ => デプロイを考えると複数台は必須
 
 TODO セキュリティ関連 確認
     TODO IAM
@@ -107,6 +179,10 @@ PEND Varnish
     - とりあえずイメージ用意だけできた
 
 ---
+DONE イメージ最小化 1GB スタート
+    - マルチビルド化 OK
+    - && 削除
+
 DONE メール
     - Sendgrid via SMTP
         - 標準機能になかった
@@ -176,7 +252,7 @@ DONE バッチ運用 magento コマンド運用
     - サイト基本設定
         - 最初のデータを入れるのだけコマンド必要？
             - ログインしないと打ち込めず
-        - $ bin/magento setup:store-config:set --base-url=http://34.85.107.58/ --language=ja_JP --currency=JPY --timezone=Asia/Tokyo --use-rewrites=1
+        - $ bin/magento setup:store-config:set --language=ja_JP --currency=JPY --timezone=Asia/Tokyo --use-rewrites=1
         - $ bin/magento admin:user:create --admin-user=admin --admin-password=dnut8hic --admin-email=aruga.kazuki@gmail.com --admin-firstname=kazuki --admin-lastname=aruga
         - $ bin/magento cache:flush
         - production
@@ -225,17 +301,17 @@ docker push asia.gcr.io/magento-gke/magento:1
 
 #### サンプル magento setup コマンド
 bin/magento setup:install \
---base-url=http://34.85.77.76/ \
---db-host= \
+--base-url=http://35.243.117.58/ \
+--db-host=10.125.192.6 \
 --db-name=magento \
---db-user=root \
---db-password=password \
+--db-user=magento \
+--db-password=Dnut8hic \
 --backend-frontname=admin \
 --admin-firstname=admin \
 --admin-lastname=admin \
 --admin-email=aruga.kazuki@gmail.com \
 --admin-user=admin \
---admin-password=Passw0rd! \
+--admin-password=Dnut8hic \
 --language=ja_JP \
 --currency=JPY \
 --timezone=Asia/Tokyo \
@@ -246,3 +322,20 @@ Redis
 
 Docker イメージづくりのヒント（composer keyの渡し方）に
 [Dockerセキュリティ: 今すぐ役に立つテクニックから，次世代技術まで](https://www.slideshare.net/AkihiroSuda/docker-125002128)
+
+- "cp -f /var/www/html/app/etc/* /var/www/html/app/nfs_etc \
+&& rm -rf /var/www/html/app/etc \
+&& ln -sf /var/www/html/app/nfs_etc /var/www/html/app/etc \
+&& cp -f /var/www/html/generated/.htaccess /var/www/html/nfs_generated \
+&& rm -rf /var/www/html/generated \
+&& ln -sf /var/www/html/nfs_generated /var/www/html/generated \
+&& cp -f /var/www/html/pub/static/.htaccess /var/www/html/pub/nfs_static \
+&& rm -rf /var/www/html/pub/static \
+&& ln -sf /var/www/html/pub/nfs_static /var/www/html/pub/static"
+
+起動したディスクによってはエラー
+==> var/log/system.log <==
+[2019-08-29 11:29:51] main.ERROR: Unable to resolve the source file for 'frontend/Magento/luma/ja_JP/Magento_Customer/js/zxcvbn.js.map' [] []
+[2019-08-29 11:29:51] main.CRITICAL: Unable to resolve the source file for 'frontend/Magento/luma/ja_JP/Magento_Customer/js/zxcvbn.js.map' [] []
+[2019-08-29 11:30:04] main.ERROR: Warning: include(/var/www/html/generated/code/Magento//Backend/Model/Auth/Proxy.php): failed to open stream: No such file or directory in /var/www/html/vendor/composer/ClassLoader.php on line 444 [] []
+[2019-08-29 11:30:10] main.ERROR: Warning: include(/var/www/html/generated/code/Magento//Framework/App/Config/FileResolver/Proxy.php): failed to open stream: No such file or directory in /var/www/html/vendor/composer/ClassLoader.php on line 444
