@@ -68,8 +68,17 @@ kind: PersistentVolumeClaim
 metadata:
   name: nfs-server-pvc
 spec:
+  storageClassName: faster
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 10Gi
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: faster
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-ssd
