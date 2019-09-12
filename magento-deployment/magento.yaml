@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: magento
   labels:
     app: magento
-  name: magento
 spec:
   type: LoadBalancer
   ports:
@@ -21,7 +21,7 @@ metadata:
   labels:
     app: magento
 spec:
-  replicas: 3
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -42,7 +42,7 @@ spec:
         runAsGroup: 33
         fsGroup: 33
       containers:
-        - image: asia.gcr.io/magento-gke-248206/magento:3
+        - image: asia.gcr.io/magento-gke-248206/magento:1
           name: magento
           resources:
             requests:
