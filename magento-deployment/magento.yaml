@@ -58,23 +58,24 @@ spec:
                 command:
                   - sh
                   - -c
-                  - "rm -rf /var/www/html/app/etc \
-                    && ln -sf /var/www/html/app/nfs_etc /var/www/html/app/etc \
-                    && rm -rf /var/www/html/generated \
-                    && ln -sf /var/www/html/nfs_generated /var/www/html/generated \
-                    && rm -rf /var/www/html/pub/static \
-                    && ln -sf /var/www/html/pub/nfs_static /var/www/html/pub/static"
+                  - "rm -rf /var/www/magento/app/etc \
+                    && ln -sf /var/www/magento/app/nfs_etc /var/www/magento/app/etc \
+                    && rm -rf /var/www/magento/generated \
+                    && ln -sf /var/www/magento/nfs_generated /var/www/magento/generated \
+                    && rm -rf /var/www/magento/pub/static \
+                    && ln -sf /var/www/magento/pub/nfs_static /var/www/magento/pub/static"
           volumeMounts:
             - name: nfs-generated-pvc
-              mountPath: /var/www/html/nfs_generated
+              mountPath: /var/www/magento/nfs_generated
             - name: nfs-view-preprocessed-pvc
-              mountPath: /var/www/html/var/view_preprocessed
+              mountPath: /var/www/magento/var/view_preprocessed
             - name: nfs-etc-pvc
-              mountPath: /var/www/html/app/nfs_etc
+              mountPath: /var/www/magento/app/nfs_etc
+              readOnly: true
             - name: nfs-upload-pvc
-              mountPath: /var/www/html/pub/media/upload
+              mountPath: /var/www/magento/pub/media/upload
             - name: nfs-static-pvc
-              mountPath: /var/www/html/pub/nfs_static
+              mountPath: /var/www/magento/pub/nfs_static
       volumes:
         - name: nfs-generated-pvc
           persistentVolumeClaim:

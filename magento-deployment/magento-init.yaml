@@ -54,26 +54,26 @@ spec:
                 command:
                   - sh
                   - -c
-                  - "cp -f /var/www/html/app/etc/* /var/www/html/app/nfs_etc \
-                    && rm -rf /var/www/html/app/etc \
-                    && ln -sf /var/www/html/app/nfs_etc /var/www/html/app/etc \
-                    && cp -f /var/www/html/generated/.htaccess /var/www/html/nfs_generated \
-                    && rm -rf /var/www/html/generated \
-                    && ln -sf /var/www/html/nfs_generated /var/www/html/generated \
-                    && cp -f /var/www/html/pub/static/.htaccess /var/www/html/pub/nfs_static \
-                    && rm -rf /var/www/html/pub/static \
-                    && ln -sf /var/www/html/pub/nfs_static /var/www/html/pub/static"
+                  - "cp -f /var/www/magento/app/etc/* /var/www/magento/app/nfs_etc \
+                    && rm -rf /var/www/magento/app/etc \
+                    && ln -sf /var/www/magento/app/nfs_etc /var/www/magento/app/etc \
+                    && cp -f /var/www/magento/generated/.htaccess /var/www/magento/nfs_generated \
+                    && rm -rf /var/www/magento/generated \
+                    && ln -sf /var/www/magento/nfs_generated /var/www/magento/generated \
+                    && cp -f /var/www/magento/pub/static/.htaccess /var/www/magento/pub/nfs_static \
+                    && rm -rf /var/www/magento/pub/static \
+                    && ln -sf /var/www/magento/pub/nfs_static /var/www/magento/pub/static"
           volumeMounts:
             - name: nfs-generated-pvc
-              mountPath: /var/www/html/nfs_generated
+              mountPath: /var/www/magento/nfs_generated
             - name: nfs-view-preprocessed-pvc
-              mountPath: /var/www/html/var/view_preprocessed
+              mountPath: /var/www/magento/var/view_preprocessed
             - name: nfs-etc-pvc
-              mountPath: /var/www/html/app/nfs_etc
+              mountPath: /var/www/magento/app/nfs_etc
             - name: nfs-upload-pvc
-              mountPath: /var/www/html/pub/media/upload
+              mountPath: /var/www/magento/pub/media/upload
             - name: nfs-static-pvc
-              mountPath: /var/www/html/pub/nfs_static
+              mountPath: /var/www/magento/pub/nfs_static
       volumes:
         - name: nfs-generated-pvc
           persistentVolumeClaim:
