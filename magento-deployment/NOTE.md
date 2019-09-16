@@ -10,8 +10,8 @@
 ## NOTE
 www-data でコンテナ起動 OK
 www-data で NFS マウント OK（Groupでなら）
-nfs-server 実行ユーザー root じゃないとマウントできない
-nfs-server の特権について理解したい
+    nfs-server 実行ユーザー root じゃないとマウントできない
+    nfs-server の特権について理解したい
 NFS クラスター OK
 Init コンテナでNFSに各キャッシュ注入 OK
     - setup
@@ -45,13 +45,11 @@ github からビルドができて6ステップ
 
 https://devdocs.magento.com/guides/v2.3/config-guide/redis/config-redis.html
 
-bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=10.4.0.223 --cache-backend-redis-db=0
+bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=10.52.12.20 --cache-backend-redis-db=0
+bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=10.52.12.20 --page-cache-redis-db=1
+bin/magento setup:config:set --session-save=redis --session-save-redis-host=10.52.12.20 --session-save-redis-log-level=3 --session-save-redis-db=2
 
-bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=10.4.0.223 --page-cache-redis-db=1
-
-bin/magento setup:config:set --session-save=redis --session-save-redis-host=10.4.0.223 --session-save-redis-log-level=3 --session-save-redis-db=2
-
-bin/magento setup:store-config:set --base-url="http://localhost:8080/"
+bin/magento setup:store-config:set --base-url="http://35.200.109.253/"
 
 ## TODO NOTE
 stdout,stderror 拡張
@@ -301,8 +299,8 @@ docker push asia.gcr.io/magento-gke/magento:1
 
 #### サンプル magento setup コマンド
 bin/magento setup:install \
---base-url=http://35.243.117.58/ \
---db-host=10.125.192.6 \
+--base-url=http://34.84.184.248/ \
+--db-host=10.125.192.5 \
 --db-name=magento \
 --db-user=magento \
 --db-password=Dnut8hic \
