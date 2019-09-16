@@ -78,13 +78,16 @@ spec:
               mountPath: /var/www/magento/nfs_generated
             - name: nfs-view-preprocessed-pvc
               mountPath: /var/www/magento/var/view_preprocessed
+              readOnly: true
             - name: nfs-etc-pvc
               mountPath: /var/www/magento/app/nfs_etc
               readOnly: true
             - name: nfs-upload-pvc
               mountPath: /var/www/magento/pub/media/upload
+              readOnly: true
             - name: nfs-static-pvc
               mountPath: /var/www/magento/pub/nfs_static
+              readOnly: true
       volumes:
         - name: nfs-generated-pvc
           persistentVolumeClaim:
