@@ -30,11 +30,8 @@ spec:
           name: magento
           resources:
             requests:
-              memory: 756Mi
-              cpu: 200m
-          ports:
-            - name: http
-              containerPort: 8080
+              memory: 768Mi
+              cpu: 500m
           lifecycle:
             postStart:
               exec:

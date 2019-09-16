@@ -51,8 +51,8 @@ spec:
           name: magento
           resources:
             requests:
-              memory: 756Mi
-              cpu: 200m
+              memory: 512Mi
+              cpu: 500m
           ports:
             - name: http
               containerPort: 8080
