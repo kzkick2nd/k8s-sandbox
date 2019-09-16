@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: magento-admin
+  labels:
+    app: magento-admin
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+  selector:
+    app: magento-admin
+    tier: frontend
