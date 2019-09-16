@@ -21,7 +21,7 @@ metadata:
   labels:
     app: magento
 spec:
-  replicas: 1
+  replicas: 3
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -65,7 +65,6 @@ spec:
           lifecycle:
             postStart:
               exec:
-                # Share static cache dir to all pods.
                 command:
                   - sh
                   - -c
