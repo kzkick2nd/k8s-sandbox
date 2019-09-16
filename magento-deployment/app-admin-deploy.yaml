@@ -40,7 +40,6 @@ spec:
           lifecycle:
             postStart:
               exec:
-                # Share static cache dir to all pods.
                 command:
                   - sh
                   - -c
@@ -52,8 +51,7 @@ spec:
                     && ln -sf /var/www/magento/nfs_generated /var/www/magento/generated \
                     && cp -f /var/www/magento/pub/static/.htaccess /var/www/magento/pub/nfs_static \
                     && rm -rf /var/www/magento/pub/static \
-                    && ln -sf /var/www/magento/pub/nfs_static /var/www/magento/pub/static \
-                    && service cron start"
+                    && ln -sf /var/www/magento/pub/nfs_static /var/www/magento/pub/static"
           volumeMounts:
             - name: nfs-generated-pvc
               mountPath: /var/www/magento/nfs_generated
