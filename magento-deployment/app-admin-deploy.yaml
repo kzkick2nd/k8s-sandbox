@@ -22,6 +22,11 @@ spec:
         runAsUser: 33
         runAsGroup: 33
         fsGroup: 33
+      tolerations:
+        - key: cloud.google.com/gke-preemptible
+          operator: Equal
+          value: "true"
+          effect: NoSchedule
       containers:
         - image: asia.gcr.io/magento-gke-248206/magento:2
           name: magento
