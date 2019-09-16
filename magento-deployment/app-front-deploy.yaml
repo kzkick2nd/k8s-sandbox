@@ -60,6 +60,8 @@ spec:
             httpGet:
               path: /pub/health_check.php
               port: 8080
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
           lifecycle:
             postStart:
               exec:
