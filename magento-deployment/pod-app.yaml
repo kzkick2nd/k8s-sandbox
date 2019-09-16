@@ -1,21 +1,49 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: magento-ingress
+spec:
+  backend:
+    serviceName: magento
+    servicePort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: magento
+  labels:
+    app: magento
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+  selector:
+    app: magento
+    tier: frontend
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: magento-init
+  name: magento
   labels:
-    app: magento-init
+    app: magento
 spec:
-  replicas: 1
+  replicas: 3
   strategy:
-    type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 0%
   selector:
     matchLabels:
-      app: magento-init
+      app: magento
       tier: frontend
   template:
     metadata:
       labels:
-        app: magento-init
+        app: magento
         tier: frontend
     spec:
       securityContext:
@@ -23,28 +51,30 @@ spec:
         runAsGroup: 33
         fsGroup: 33
       containers:
-        - image: asia.gcr.io/magento-gke-248206/magento:1
-          name: magento-init
+        - image: asia.gcr.io/magento-gke-248206/magento:2
+          name: magento
           resources:
             requests:
-              memory: 768Mi
+              memory: 756Mi
               cpu: 200m
           ports:
             - name: http
               containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /pub/health_check.php
+              port: 8080
           lifecycle:
             postStart:
               exec:
+                # Share static cache dir to all pods.
                 command:
                   - sh
                   - -c
-                  - "cp -f /var/www/magento/app/etc/* /var/www/magento/app/nfs_etc \
-                    && rm -rf /var/www/magento/app/etc \
+                  - "rm -rf /var/www/magento/app/etc \
                     && ln -sf /var/www/magento/app/nfs_etc /var/www/magento/app/etc \
-                    && cp -f /var/www/magento/generated/.htaccess /var/www/magento/nfs_generated \
                     && rm -rf /var/www/magento/generated \
                     && ln -sf /var/www/magento/nfs_generated /var/www/magento/generated \
-                    && cp -f /var/www/magento/pub/static/.htaccess /var/www/magento/pub/nfs_static \
                     && rm -rf /var/www/magento/pub/static \
                     && ln -sf /var/www/magento/pub/nfs_static /var/www/magento/pub/static"
           volumeMounts:
@@ -54,6 +84,7 @@ spec:
               mountPath: /var/www/magento/var/view_preprocessed
             - name: nfs-etc-pvc
               mountPath: /var/www/magento/app/nfs_etc
+              readOnly: true
             - name: nfs-upload-pvc
               mountPath: /var/www/magento/pub/media/upload
             - name: nfs-static-pvc
