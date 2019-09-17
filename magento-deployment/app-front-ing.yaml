@@ -4,5 +4,5 @@ metadata:
   name: magento-ingress
 spec:
   backend:
-    serviceName: magento
+    serviceName: magento-app
     servicePort: 80

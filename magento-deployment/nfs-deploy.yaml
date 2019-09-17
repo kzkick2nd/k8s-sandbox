@@ -11,7 +11,7 @@ spec:
     - name: rpcbind
       port: 111
   selector:
-    role: nfs-server
+    app: nfs-server
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -23,11 +23,11 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      role: nfs-server
+      app: nfs-server
   template:
     metadata:
       labels:
-        role: nfs-server
+        app: nfs-server
     spec:
       securityContext:
         runAsUser: 0

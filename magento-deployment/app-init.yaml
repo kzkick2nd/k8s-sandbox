@@ -3,20 +3,21 @@ kind: Deployment
 metadata:
   name: magento-init
   labels:
-    app: magento-init
+    app: magento
+    component: init
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: magento-init
-      tier: frontend
+      app: magento
+      component: init
   template:
     metadata:
       labels:
-        app: magento-init
-        tier: frontend
+        app: magento
+        component: init
     spec:
       securityContext:
         runAsNonRoot: true
@@ -30,7 +31,7 @@ spec:
           effect: NoSchedule
       containers:
         - image: asia.gcr.io/magento-gke-248206/magento:2
-          name: magento-init
+          name: magento
           ports:
             - name: http
               containerPort: 8080

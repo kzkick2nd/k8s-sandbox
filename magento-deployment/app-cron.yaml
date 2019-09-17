@@ -3,20 +3,21 @@ kind: Deployment
 metadata:
   name: magento-cron
   labels:
-    app: magento-cron
+    app: magento
+    component: cron
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: magento-cron
-      tier: backend
+      app: magento
+      component: cron
   template:
     metadata:
       labels:
-        app: magento-cron
-        tier: backend
+        app: magento
+        component: cron
     spec:
       securityContext:
         runAsUser: 0

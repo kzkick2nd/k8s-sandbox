@@ -3,20 +3,21 @@ kind: Deployment
 metadata:
   name: magento-admin
   labels:
-    app: magento-admin
+    app: magento
+    component: admin
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: magento-admin
-      tier: frontend
+      app: magento
+      component: admin
   template:
     metadata:
       labels:
-        app: magento-admin
-        tier: frontend
+        app: magento
+        component: admin
     spec:
       securityContext:
         runAsNonRoot: true

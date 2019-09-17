@@ -3,7 +3,8 @@ kind: Service
 metadata:
   name: magento-admin
   labels:
-    app: magento-admin
+    app: magento
+    component: admin
 spec:
   type: LoadBalancer
   ports:
@@ -11,5 +12,5 @@ spec:
       port: 80
       targetPort: 8080
   selector:
-    app: magento-admin
-    tier: frontend
+    app: magento
+    component: admin
