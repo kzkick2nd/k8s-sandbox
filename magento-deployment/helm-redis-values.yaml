@@ -233,8 +233,8 @@ master:
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   resources:
     requests:
-      memory: 192Mi
-      cpu: 100m
+      memory: 256Mi
+      cpu: 200m
   ## Use an alternate scheduler, e.g. "stork".
   ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
   ##

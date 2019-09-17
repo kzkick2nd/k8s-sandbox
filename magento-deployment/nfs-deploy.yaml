@@ -38,8 +38,8 @@ spec:
           image: k8s.gcr.io/volume-nfs:0.8
           resources:
             requests:
-              memory: 192Mi
-              cpu: 100m
+              memory: 256Mi
+              cpu: 200m
           securityContext:
             privileged: true
           ports:
