@@ -2,7 +2,18 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: magento-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: magento-static-ip
+    networking.gke.io/managed-certificates: frontend-certificate
 spec:
   backend:
     serviceName: magento-app
     servicePort: 80
+---
+apiVersion: networking.gke.io/v1beta1
+kind: ManagedCertificate
+metadata:
+  name: frontend-certificate
+spec:
+  domains:
+    - example.com
