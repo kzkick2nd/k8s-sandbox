@@ -32,8 +32,6 @@ spec:
     metadata:
       labels:
         app: nfs-server
-        labels:
-          app: nfs-server
     spec:
       securityContext:
         runAsUser: 0
