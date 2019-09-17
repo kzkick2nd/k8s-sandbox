@@ -1,3 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: magento-admin
+  labels:
+    app: magento
+    component: admin
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+  selector:
+    app: magento
+    component: admin
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
