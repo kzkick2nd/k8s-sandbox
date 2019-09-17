@@ -7,6 +7,37 @@ https://devdocs.magento.com/guides/v2.3/install-gde/install/cli/install-cli-subc
 bin/magento admin:user:unlock
 bin/magento setup:store-config:set --base-url="http://34.102.208.132/"
 
+## ServiceAccount
+    IAM + ServiceAccoun
+## VPC/SubNet
+    gcloud OK
+## 限定公開クラスタの設定
+    https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters?hl=ja
+## NetWorkPolicy
+    => 先にNamespaceの設計必要 OK
+    https://cloud.google.com/kubernetes-engine/docs/concepts/network-overview?hl=ja
+    https://kubernetes.io/docs/concepts/services-networking/network-policies/
+    app:magento component: frontend <=> svc
+    app:magento component: admin <=> svc, IP
+    app:magento component: cron <=> nil
+    app:redis <=> app:magento
+    nfs <=> internal port
+## Admin側のIP制限
+    NW Policy で実施
+## CloudBuild
+    GitOps
+## Spec
+    preemptive 2core + 2.75GB + 50GB
+## SSL
+    負荷分散からマネージドSSL ?
+
+## SecurityContext OK
+    readOnlyRootFilesystem: true
+## PodSecurityPolicy OK
+    個別設定でOK
+## Labelの設計 OK
+    app, component
+
 ## gcloud 準備
 gcloud init
 gcloud container images list --repository=asia.gcr.io/magento-gke-248206
