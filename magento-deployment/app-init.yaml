@@ -19,6 +19,7 @@ spec:
         tier: frontend
     spec:
       securityContext:
+        runAsNonRoot: true
         runAsUser: 33
         runAsGroup: 33
         fsGroup: 33
