@@ -3,40 +3,85 @@ var/.maintenance.flag
 が必要になる
 https://devdocs.magento.com/guides/v2.3/install-gde/install/cli/install-cli-subcommands-maint.html
 
-たまに使う Magento コマンド
+たまに使うコマンド
+gcloud sql databases delete [DB_NAME] -i [INSTANCE_NAME]
 bin/magento admin:user:unlock
-bin/magento setup:store-config:set --base-url="http://34.102.208.132/"
+bin/magento setup:store-config:set --base-url=
+bin/magento setup:static-content:deploy ja_JP
 
-## ServiceAccount
-    IAM + ServiceAccoun
-## VPC/SubNet
-    gcloud OK
-## 限定公開クラスタの設定
-    https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters?hl=ja
-## NetWorkPolicy
-    => 先にNamespaceの設計必要 OK
-    https://cloud.google.com/kubernetes-engine/docs/concepts/network-overview?hl=ja
-    https://kubernetes.io/docs/concepts/services-networking/network-policies/
-    app:magento component: frontend <=> svc
-    app:magento component: admin <=> svc, IP
-    app:magento component: cron <=> nil
-    app:redis <=> app:magento
-    nfs <=> internal port
-## Admin側のIP制限
-    NW Policy で実施
+gcloud iam service-accounts list
+gcloud info --format='value(config.project)'
+
+## 進捗
+    - 構成手順
+    - システム説明構成図
+    - 動作テスト
+    - 継続的デリバリー
+
+    - クロス ZONE PV エラー => Node のオートスケールを許可 OK
+    - ServiceAccount => 時間が必要 OK
+
 ## CloudBuild
     GitOps
-## Spec
-    preemptive 2core + 2.75GB + 50GB
-## SSL
-    負荷分散からマネージドSSL ?
+    - Cloud Build でコンテナ イメージを作成する
+    - 継続的インテグレーション パイプラインを作成する
+    - 継続的デリバリー パイプラインを作成する
 
-## SecurityContext OK
+## SecurityContext
     readOnlyRootFilesystem: true
+    => NFS マウントできない
+    => 部分的に書き込み可能にできない？
+    privillage: true
+    => 部分的にできないか？
+
+## Admin側のIP制限
+    Ingress で制限かけられない？
+
+## GCE のファイアーウォール？
+    - 外部 IP が構成されている
+
+## クラスタ マスター アクセス用の承認済みネットワークの追加
+    マスターアクセスネットワーク制御。GCPだけにすればよい？
+
+## 限定公開クラスタの設定
+    完全スタンドアローンからホワイトリスト、過激すぎない？
+    https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters?hl=ja
+
+---
+## NFS 系 OK
+- nfs がボトルネック。他の構成方法ない？ => NFS 一部に
+- M2 メンテナンスモード var/.maintenance の配布方法 => 複数 Pod に kubectl exec 打ち込む運用に
+
+## IAM, Uer RBAC, GSA, KSA OK
+    IAM=RBAC 関連項目の用意 OK
+    Node 起動 GSA の作成必須 OK
+        https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster?hl=ja#use_least_privilege_sa
+        - モニタリング閲覧者
+        - モニタリング指標の書き込み
+        - ログ書き込み
+        - ストレージオブジェクト閲覧者
+    Pod 用 GKE=KSA の作成 OK
+        - Pod 用 KSA<=>GSA の作成と連携
+        - 最初は API 権限不要？
+## Shielded VM OK
+    https://cloud.google.com/shielded-vm/?hl=ja
+## SSL OK
+    静的IP > 「負荷分散」マネージドSSL
+    https://cloud.google.com/kubernetes-engine/docs/tutorials/configuring-domain-name-static-ip?hl=ja
+    https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs?hl=ja
+## Spec OK
+    small + preemptive 2Core + 3GB + SSD50GB = $100
+## VPC/SubNet OK
+    gcloud cmd
 ## PodSecurityPolicy OK
     個別設定でOK
 ## Labelの設計 OK
     app, component
+## NetWorkPolicy OK
+    => 先にNamespaceの設計必要 OK
+    https://cloud.google.com/kubernetes-engine/docs/concepts/network-overview?hl=ja
+    https://kubernetes.io/docs/concepts/services-networking/network-policies/
+    app:magento <=> app:redis
 
 ## gcloud 準備
 gcloud init
