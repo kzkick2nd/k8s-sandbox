@@ -24,8 +24,8 @@ PrivateIP 割当が発生するので WEB Console から新規作成する
 - 暖気に時間がとられるので注意
 - network は magento を指定
 - PrivateIP 接続を選択
-> NOTE: DB_RootPass = i4r6tqwwI74j6Ltg
-> NOTE: DB_PrivateIp = 10.91.64.3
+> NOTE: DB_RootPass =
+> NOTE: DB_PrivateIp =
 
 $ gcloud sql databases create magento -i magento-sql --charset=utf8mb4
 $ gcloud sql users create magento --host=% --instance=magento-sql --password=[DB_PASS]
@@ -91,7 +91,7 @@ helm init --upgrade --service-account tiller
 
 helm install --name redis -f helm-redis-values.yaml stable/redis
 kubectl get secret --namespace default redis -o jsonpath="{.data.redis-password}" | base64 --decode
-> NOTE: REDIS_PASS = N9z9arrXa4
+> NOTE: REDIS_PASS =
 
 # GCR Image 格納
 $ gcloud auth configure-docker
@@ -119,11 +119,9 @@ $ bin/magento setup:install \
     --timezone=Asia/Tokyo \
     --use-rewrites=1
 
-bin/magento setup:install --base-url=http://34.84.189.46/ --db-host=10.91.64.3 --db-name=magento --db-user=magento --db-password=Passw0rd --backend-frontname=admin --admin-firstname=admin --admin-lastname=admin --admin-email=aruga.kazuki@gmail.com --admin-user=admin --admin-password=Dnut8hic --language=ja_JP --currency=JPY --timezone=Asia/Tokyo --use-rewrites=1
-
-$ bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=redis-master.default.svc.cluster.local --cache-backend-redis-db=0 --cache-backend-redis-password=N9z9arrXa4
-$ bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=redis-master.default.svc.cluster.local --page-cache-redis-db=1 --page-cache-redis-password=N9z9arrXa4
-$ bin/magento setup:config:set --session-save=redis --session-save-redis-host=redis-master.default.svc.cluster.local --session-save-redis-log-level=3 --session-save-redis-db=2 --session-save-redis-password=N9z9arrXa4
+$ bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=redis-master.default.svc.cluster.local --cache-backend-redis-db=0 --cache-backend-redis-password=
+$ bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=redis-master.default.svc.cluster.local --page-cache-redis-db=1 --page-cache-redis-password=
+$ bin/magento setup:config:set --session-save=redis --session-save-redis-host=redis-master.default.svc.cluster.local --session-save-redis-log-level=3 --session-save-redis-db=2 --session-save-redis-password=
 
 $ bin/magento deploy:mode:set production
 
