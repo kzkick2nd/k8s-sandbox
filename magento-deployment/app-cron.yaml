@@ -28,6 +28,7 @@ spec:
           operator: Equal
           value: "true"
           effect: NoSchedule
+      serviceAccountName: magento-ksa
       containers:
         - image: asia.gcr.io/magento-gke-248206/magento:2
           name: magento

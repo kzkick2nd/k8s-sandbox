@@ -40,6 +40,7 @@ spec:
         runAsUser: 0
         runAsGroup: 33
         fsGroup: 33
+      serviceAccountName: magento-ksa
       containers:
         - name: nfs-server
           image: k8s.gcr.io/volume-nfs:0.8
