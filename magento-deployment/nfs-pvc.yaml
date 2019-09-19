@@ -27,7 +27,7 @@ spec:
     - ReadWriteMany
   storageClassName: nfs
   nfs:
-    server: nfs-server.default.svc.cluster.local
+    server: nfs-server.magento-ns.svc.cluster.local
     path: /etc/
 ---
 apiVersion: v1
@@ -59,7 +59,7 @@ spec:
     - ReadWriteMany
   storageClassName: nfs
   nfs:
-    server: nfs-server.default.svc.cluster.local
+    server: nfs-server.magento-ns.svc.cluster.local
     path: /view_preprocessed/
 ---
 apiVersion: v1
@@ -91,7 +91,7 @@ spec:
     - ReadWriteMany
   storageClassName: nfs
   nfs:
-    server: nfs-server.default.svc.cluster.local
+    server: nfs-server.magento-ns.svc.cluster.local
     path: /generated/
 ---
 apiVersion: v1
@@ -123,7 +123,7 @@ spec:
     - ReadWriteMany
   storageClassName: nfs
   nfs:
-    server: nfs-server.default.svc.cluster.local
+    server: nfs-server.magento-ns.svc.cluster.local
     path: /static/
 ---
 apiVersion: v1
@@ -155,5 +155,5 @@ spec:
     - ReadWriteMany
   storageClassName: nfs
   nfs:
-    server: nfs-server.default.svc.cluster.local
+    server: nfs-server.magento-ns.svc.cluster.local
     path: /upload/
