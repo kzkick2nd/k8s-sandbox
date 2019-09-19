@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: magento-ns
   name: magento-init
   labels:
     app: magento
@@ -15,6 +16,7 @@ spec:
       component: init
   template:
     metadata:
+      namespace: magento-ns
       labels:
         app: magento
         component: init

@@ -1,6 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
+  namespace: magento-ns
   name: magento-admin-ingress
   annotations:
     kubernetes.io/ingress.global-static-ip-name: magento-admin-static-ip
@@ -13,6 +14,7 @@ spec:
 apiVersion: networking.gke.io/v1beta1
 kind: ManagedCertificate
 metadata:
+  namespace: magento-ns
   name: admin-certificate
 spec:
   domains:

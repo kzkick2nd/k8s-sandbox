@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: magento-ns
   name: magento-cron
   labels:
     app: magento
@@ -15,6 +16,7 @@ spec:
       component: cron
   template:
     metadata:
+      namespace: magento-ns
       labels:
         app: magento
         component: cron

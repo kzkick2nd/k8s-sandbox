@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  namespace: magento-ns
   name: nfs-etc-pvc
 spec:
   selector:
@@ -32,6 +33,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  namespace: magento-ns
   name: nfs-view-preprocessed-pvc
 spec:
   selector:
@@ -63,6 +65,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  namespace: magento-ns
   name: nfs-generated-pvc
 spec:
   selector:
@@ -94,6 +97,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  namespace: magento-ns
   name: nfs-static-pvc
 spec:
   selector:
@@ -125,6 +129,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  namespace: magento-ns
   name: nfs-upload-pvc
 spec:
   selector:
