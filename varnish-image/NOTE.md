@@ -1,0 +1,4 @@
+- Magento2.2.3 時点では Varnish 6 対応してない
+- 公式には 6 しかない https://hub.docker.com/_/varnish
+- 5.2.0-1 用のイメージを作成する
+    - https://packagecloud.io/varnishcache

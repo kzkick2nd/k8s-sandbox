@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: magento-ns
+  name: magento-init
+  labels:
+    app: magento
+    component: init
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: magento
+      component: init
+  template:
+    metadata:
+      namespace: magento-ns
+      labels:
+        app: magento
+        component: init
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 33
+        runAsGroup: 33
+        fsGroup: 33
+      tolerations:
+        - key: cloud.google.com/gke-preemptible
+          operator: Equal
+          value: "true"
+          effect: NoSchedule
+      serviceAccountName: magento-ksa
+      containers:
+        - image: asia.gcr.io/magento2-gke/magento:1
+          name: magento
+          ports:
+            - name: http
+              containerPort: 8080
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - sh
+                  - -c
+                  - "cp -f /var/www/magento/app/etc/* /var/www/magento/app/nfs_etc \
+                    && rm -rf /var/www/magento/app/etc \
+                    && ln -sf /var/www/magento/app/nfs_etc /var/www/magento/app/etc \
+                    && cp -f /var/www/magento/generated/.htaccess /var/www/magento/nfs_generated \
+                    && rm -rf /var/www/magento/generated \
+                    && ln -sf /var/www/magento/nfs_generated /var/www/magento/generated \
+                    && cp -f /var/www/magento/pub/static/.htaccess /var/www/magento/pub/nfs_static \
+                    && rm -rf /var/www/magento/pub/static \
+                    && ln -sf /var/www/magento/pub/nfs_static /var/www/magento/pub/static"
+          volumeMounts:
+            - name: nfs-generated-pvc
+              mountPath: /var/www/magento/nfs_generated
+            - name: nfs-view-preprocessed-pvc
+              mountPath: /var/www/magento/var/view_preprocessed
+            - name: nfs-etc-pvc
+              mountPath: /var/www/magento/app/nfs_etc
+            - name: nfs-upload-pvc
+              mountPath: /var/www/magento/pub/media/upload
+            - name: nfs-static-pvc
+              mountPath: /var/www/magento/pub/nfs_static
+      volumes:
+        - name: nfs-generated-pvc
+          persistentVolumeClaim:
+            claimName: nfs-generated-pvc
+        - name: nfs-view-preprocessed-pvc
+          persistentVolumeClaim:
+            claimName: nfs-view-preprocessed-pvc
+        - name: nfs-etc-pvc
+          persistentVolumeClaim:
+            claimName: nfs-etc-pvc
+        - name: nfs-upload-pvc
+          persistentVolumeClaim:
+            claimName: nfs-upload-pvc
+        - name: nfs-static-pvc
+          persistentVolumeClaim:
+            claimName: nfs-static-pvc

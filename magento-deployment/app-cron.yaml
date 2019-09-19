@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: magento-ns
+  name: magento-cron
+  labels:
+    app: magento
+    component: cron
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: magento
+      component: cron
+  template:
+    metadata:
+      namespace: magento-ns
+      labels:
+        app: magento
+        component: cron
+    spec:
+      securityContext:
+        runAsUser: 0
+      tolerations:
+        - key: cloud.google.com/gke-preemptible
+          operator: Equal
+          value: "true"
+          effect: NoSchedule
+      serviceAccountName: magento-ksa
+      containers:
+        - image: asia.gcr.io/magento2-gke/magento:1
+          name: magento
+          resources:
+            requests:
+              memory: 768Mi
+              cpu: 500m
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - sh
+                  - -c
+                  - "bin/magento setup:install --base-url=$URL --db-host=$DB_HOST --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASSWORD --backend-frontname=admin --admin-firstname=admin --admin-lastname=admin --admin-email=$ADMIN_EMAIL --admin-user=$ADMIN_USER --admin-password=$ADMIN_PASSWORD --language=ja_JP --currency=JPY --timezone=Asia/Tokyo --use-rewrites=1 \
+                    && rm /var/www/magento/app/etc/env.php \
+                    && ln -sf /var/www/magento/app/nfs_etc/env.php /var/www/magento/app/etc/env.php \
+                    && bin/magento setup:di:compile \
+                    && bin/magento setup:static-content:deploy ja_JP \
+                    && bin/magento cron:install --force \
+                    && service cron start"
+          volumeMounts:
+            - name: nfs-etc-pvc
+              mountPath: /var/www/magento/app/nfs_etc
+              readOnly: true
+      volumes:
+        - name: nfs-etc-pvc
+          persistentVolumeClaim:
+            claimName: nfs-etc-pvc

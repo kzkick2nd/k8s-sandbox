@@ -1,0 +1,53 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: magento-cron
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: Replace
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - image: asia.gcr.io/magento-gke-248206/magento:3
+              name: magento
+              resources:
+                requests:
+                  memory: 256Mi
+                  cpu: 100m
+              command:
+                - /usr/local/bin/php
+              args:
+                - /var/www/html/bin/magento
+                - cron:run
+              # following settings are the same as the App pod
+              lifecycle:
+                postStart:
+                  exec:
+                    # Share static cache dir to all pods.
+                    command:
+                      - sh
+                      - -c
+                      - "rm -rf /var/www/html/app/etc \
+                        && ln -sf /var/www/html/app/nfs_etc /var/www/html/app/etc \
+                        && rm -rf /var/www/html/pub/static \
+                        && ln -sf /var/www/html/pub/nfs_static /var/www/html/pub/static"
+              volumeMounts:
+                - name: nfs-etc-pvc
+                  mountPath: /var/www/html/app/nfs_etc
+                - name: nfs-upload-pvc
+                  mountPath: /var/www/html/pub/media/upload
+                - name: nfs-static-pvc
+                  mountPath: /var/www/html/pub/nfs_static
+          volumes:
+            - name: nfs-etc-pvc
+              persistentVolumeClaim:
+                claimName: nfs-etc-pvc
+            - name: nfs-upload-pvc
+              persistentVolumeClaim:
+                claimName: nfs-upload-pvc
+            - name: nfs-static-pvc
+              persistentVolumeClaim:
+                claimName: nfs-static-pvc
