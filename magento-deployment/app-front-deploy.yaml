@@ -75,40 +75,21 @@ spec:
                 command:
                   - sh
                   - -c
-                  - "rm -rf /var/www/magento/app/etc \
-                    && ln -sf /var/www/magento/app/nfs_etc /var/www/magento/app/etc \
-                    && rm -rf /var/www/magento/generated \
-                    && ln -sf /var/www/magento/nfs_generated /var/www/magento/generated \
-                    && rm -rf /var/www/magento/pub/static \
-                    && ln -sf /var/www/magento/pub/nfs_static /var/www/magento/pub/static"
+                  - "bin/magento setup:install --base-url=https://kzkiq.com/ --db-host=10.91.64.3 --db-name=magento --db-user=magento --db-password=Passw0rd --backend-frontname=admin --admin-firstname=admin --admin-lastname=admin --admin-email=aruga.kazuki@gmail.com --admin-user=admin --admin-password=Dnut8hic --language=ja_JP --currency=JPY --timezone=Asia/Tokyo --use-rewrites=1 \
+                    && rm /var/www/magento/app/etc/env.php \
+                    && ln -sf /var/www/magento/app/nfs_etc/env.php /var/www/magento/app/etc/env.php \
+                    && bin/magento setup:di:compile \
+                    && bin/magento setup:static-content:deploy ja_JP"
           volumeMounts:
-            - name: nfs-generated-pvc
-              mountPath: /var/www/magento/nfs_generated
-            - name: nfs-view-preprocessed-pvc
-              mountPath: /var/www/magento/var/view_preprocessed
-              readOnly: true
             - name: nfs-etc-pvc
               mountPath: /var/www/magento/app/nfs_etc
               readOnly: true
             - name: nfs-upload-pvc
               mountPath: /var/www/magento/pub/media/upload
-              readOnly: true
-            - name: nfs-static-pvc
-              mountPath: /var/www/magento/pub/nfs_static
-              readOnly: true
       volumes:
-        - name: nfs-generated-pvc
-          persistentVolumeClaim:
-            claimName: nfs-generated-pvc
-        - name: nfs-view-preprocessed-pvc
-          persistentVolumeClaim:
-            claimName: nfs-view-preprocessed-pvc
         - name: nfs-etc-pvc
           persistentVolumeClaim:
             claimName: nfs-etc-pvc
         - name: nfs-upload-pvc
           persistentVolumeClaim:
             claimName: nfs-upload-pvc
-        - name: nfs-static-pvc
-          persistentVolumeClaim:
-            claimName: nfs-static-pvc
