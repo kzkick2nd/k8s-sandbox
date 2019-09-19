@@ -51,7 +51,7 @@ spec:
           effect: NoSchedule
       serviceAccountName: magento-ksa
       containers:
-        - image: asia.gcr.io/magento-gke-248206/magento:2
+        - image: asia.gcr.io/magento2-gke/magento:1
           name: magento
           resources:
             requests:
@@ -64,7 +64,7 @@ spec:
             httpGet:
               path: /pub/health_check.php
               port: 8080
-            initialDelaySeconds: 15
+            initialDelaySeconds: 60
             timeoutSeconds: 10
           lifecycle:
             postStart:
