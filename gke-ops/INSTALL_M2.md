@@ -75,6 +75,7 @@ $ kubectl annotate serviceaccount \
     --namespace magento-ns \
     magento-ksa \
     iam.gke.io/gcp-service-account=magento-pod-gke@magento2-gke.iam.gserviceaccount.com
+$ kubectl config set-context $(kubectl config current-context) --namespace=magento-ns
 
 > WId を設定してある場合これで namespace と serviceAccount を指定する限りは GSA の権限を共有する
 > kubectl 全てで namespace と serviceAccount を固定していいかも
