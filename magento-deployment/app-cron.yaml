@@ -36,19 +36,47 @@ spec:
             requests:
               memory: 768Mi
               cpu: 500m
+          env:
+            - name: SECRET_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: magento-secret
+                  key: db-password
+            - name: SECRET_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: magento-secret
+                  key: admin-password
+          envFrom:
+            - configMapRef:
+                name: magento-config
           lifecycle:
             postStart:
               exec:
                 command:
                   - sh
                   - -c
-                  - "bin/magento setup:install --base-url=$URL --db-host=$DB_HOST --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASSWORD --backend-frontname=admin --admin-firstname=admin --admin-lastname=admin --admin-email=$ADMIN_EMAIL --admin-user=$ADMIN_USER --admin-password=$ADMIN_PASSWORD --language=ja_JP --currency=JPY --timezone=Asia/Tokyo --use-rewrites=1 \
-                    && rm /var/www/magento/app/etc/env.php \
-                    && ln -sf /var/www/magento/app/nfs_etc/env.php /var/www/magento/app/etc/env.php \
-                    && bin/magento setup:di:compile \
-                    && bin/magento setup:static-content:deploy ja_JP \
-                    && bin/magento cron:install --force \
-                    && service cron start"
+                  - "bin/magento setup:install --base-url=$URL \
+                    --db-host=$DB_HOST \
+                    --db-name=$DB_NAME \
+                    --db-user=$DB_USER \
+                    --db-password=$SECRET_DB_PASSWORD \
+                    --backend-frontname=admin \
+                    --admin-firstname=admin \
+                    --admin-lastname=admin \
+                    --admin-email=$ADMIN_EMAIL \
+                    --admin-user=$ADMIN_USER \
+                    --admin-password=$SECRET_ADMIN_PASSWORD \
+                    --language=ja_JP \
+                    --currency=JPY \
+                    --timezone=Asia/Tokyo \
+                    --use-rewrites=1 \
+                    # && rm /var/www/magento/app/etc/env.php \
+                    # && ln -sf /var/www/magento/app/nfs_etc/env.php /var/www/magento/app/etc/env.php \
+                    # && bin/magento setup:di:compile \
+                    # && bin/magento setup:static-content:deploy ja_JP \
+                    # && bin/magento cron:install --force \
+                    # && service cron start"
           volumeMounts:
             - name: nfs-etc-pvc
               mountPath: /var/www/magento/app/nfs_etc
