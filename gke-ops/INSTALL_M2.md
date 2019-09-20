@@ -103,22 +103,6 @@ $ docker push asia.gcr.io/magento2-gke/magento:1
 $ kubectl apply -f app-init.yaml
 
 $ kubectl exec -it [INIT_POD] -- bash
-$ bin/magento setup:install \
-    --base-url=https://[DOMAIN_NAME]/ \
-    --db-host=[DB_IP] \
-    --db-name=magento \
-    --db-user=magento \
-    --db-password=[DB_PASS] \
-    --backend-frontname=admin \
-    --admin-firstname=admin \
-    --admin-lastname=admin \
-    --admin-email=[ADMIN_EMAIL] \
-    --admin-user=admin \
-    --admin-password=[ADMIN_PASS] \
-    --language=ja_JP \
-    --currency=JPY \
-    --timezone=Asia/Tokyo \
-    --use-rewrites=1
 
 $ bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=redis-master.default.svc.cluster.local --cache-backend-redis-db=0 --cache-backend-redis-password=
 $ bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=redis-master.default.svc.cluster.local --page-cache-redis-db=1 --page-cache-redis-password=

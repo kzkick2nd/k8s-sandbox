@@ -12,6 +12,11 @@ bin/magento setup:static-content:deploy ja_JP
 gcloud iam service-accounts list
 gcloud info --format='value(config.project)'
 
+kubectl scale deployment --replicas=0 [DEPLOY]
+kubectl get pods | grep Evicted | awk '{print $1}' | xargs kubectl delete pod
+
+magento-app コンテナのローリングアップデートはだいたい3分で完了する
+
 ## 進捗
     - 構成手順
     - システム説明構成図
