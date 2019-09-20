@@ -17,6 +17,8 @@ kubectl get pods | grep Evicted | awk '{print $1}' | xargs kubectl delete pod
 
 magento-app コンテナのローリングアップデートはだいたい3分で完了する
 
+upload の write 権限外すと起動できない
+
 ## 進捗
     - 構成手順
     - システム説明構成図
