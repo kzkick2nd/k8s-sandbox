@@ -71,12 +71,12 @@ spec:
                     --currency=JPY \
                     --timezone=Asia/Tokyo \
                     --use-rewrites=1 \
-                    # && rm /var/www/magento/app/etc/env.php \
-                    # && ln -sf /var/www/magento/app/nfs_etc/env.php /var/www/magento/app/etc/env.php \
-                    # && bin/magento setup:di:compile \
-                    # && bin/magento setup:static-content:deploy ja_JP \
-                    # && bin/magento cron:install --force \
-                    # && service cron start"
+                    && rm /var/www/magento/app/etc/env.php \
+                    && ln -sf /var/www/magento/app/nfs_etc/env.php /var/www/magento/app/etc/env.php \
+                    && bin/magento setup:di:compile \
+                    && bin/magento setup:static-content:deploy ja_JP \
+                    && bin/magento cron:install --force \
+                    && service cron start"
           volumeMounts:
             - name: nfs-etc-pvc
               mountPath: /var/www/magento/app/nfs_etc
