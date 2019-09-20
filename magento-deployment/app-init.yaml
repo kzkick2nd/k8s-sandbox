@@ -38,6 +38,20 @@ spec:
           ports:
             - name: http
               containerPort: 8080
+          env:
+            - name: SECRET_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: magento-secret
+                  key: db-password
+            - name: SECRET_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: magento-secret
+                  key: admin-password
+          envFrom:
+            - configMapRef:
+                name: magento-config
           lifecycle:
             postStart:
               exec:
@@ -52,7 +66,22 @@ spec:
                     && ln -sf /var/www/magento/nfs_generated /var/www/magento/generated \
                     && cp -f /var/www/magento/pub/static/.htaccess /var/www/magento/pub/nfs_static \
                     && rm -rf /var/www/magento/pub/static \
-                    && ln -sf /var/www/magento/pub/nfs_static /var/www/magento/pub/static"
+                    && ln -sf /var/www/magento/pub/nfs_static /var/www/magento/pub/static \
+                    && bin/magento setup:install --base-url=$URL \
+                      --db-host=$DB_HOST \
+                      --db-name=$DB_NAME \
+                      --db-user=$DB_USER \
+                      --db-password=$SECRET_DB_PASSWORD \
+                      --backend-frontname=admin \
+                      --admin-firstname=admin \
+                      --admin-lastname=admin \
+                      --admin-email=$ADMIN_EMAIL \
+                      --admin-user=$ADMIN_USER \
+                      --admin-password=$SECRET_ADMIN_PASSWORD \
+                      --language=ja_JP \
+                      --currency=JPY \
+                      --timezone=Asia/Tokyo \
+                      --use-rewrites=1"
           volumeMounts:
             - name: nfs-generated-pvc
               mountPath: /var/www/magento/nfs_generated
