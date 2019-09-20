@@ -1,49 +1,30 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: base-network-policy
+  name: deny-all-ingress
   namespace: magento-ns
 spec:
   podSelector: {}
   policyTypes:
   - Ingress
   - Egress
-  ingress:
-  - {}
   egress:
   - {}
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: NetworkPolicy
-# metadata:
-#   name: app-network-policy
-#   namespace: magento-ns
-# spec:
-#   podSelector:
-#     matchLabels:
-#       app: magento
-#       component: frontend
-#   policyTypes:
-#   - Ingress
-#   ingress:
-#   - from:
-#     - podSelector:
-#         matchLabels:
-#           app: redis
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: NetworkPolicy
-# metadata:
-#   name: redis-network-policy
-#   namespace: magento-ns
-# spec:
-#   podSelector:
-#     matchLabels:
-#       app: redis
-#   policyTypes:
-#   - Ingress
-#   ingress:
-#   - from:
-#     - podSelector:
-#         matchLabels:
-#           app: magento
+---
+# Magento は NodePort 経由の 8080 通信ポートを許可する
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: magento-ingress-policy
+  namespace: magento-ns
+spec:
+  podSelector:
+    matchLabels:
+      app: magento
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    ports:
+    - protocol: TCP
+      port: 8080
