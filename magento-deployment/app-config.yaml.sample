@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: magento-config
+  namespace: magento-ns
+data:
+  URL:
+  DB_HOST:
+  DB_NAME:
+  DB_USER:
+  ADMIN_USER:
+  ADMIN_EMAIL:
