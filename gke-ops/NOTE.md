@@ -14,6 +14,7 @@ gcloud info --format='value(config.project)'
 
 kubectl scale deployment --replicas=0 [DEPLOY]
 kubectl get pods | grep Evicted | awk '{print $1}' | xargs kubectl delete pod
+kubectl delete pod --grace-period 0 --force [POD]
 
 magento-app コンテナのローリングアップデートはだいたい3分で完了する
 
