@@ -28,3 +28,45 @@ spec:
     ports:
     - protocol: TCP
       port: 8080
+---
+# NFS は ClusterIP 経由の 2049, 20048, 51413, 51413(UDP) 通信を許可する
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: nfs-ingress-policy
+  namespace: magento-ns
+spec:
+  podSelector:
+    matchLabels:
+      app: nfs-server-provisioner
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    ports:
+    - protocol: TCP
+      port: 2049
+    - protocol: TCP
+      port: 20048
+    - protocol: TCP
+      port: 51413
+    - protocol: UDP
+      port: 51413
+---
+# Redis は 6379 からの通信を許可する
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: redis-ingress-policy
+  namespace: magento-ns
+spec:
+  podSelector:
+    matchLabels:
+      app: redis
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    ports:
+    - protocol: TCP
+      port: 6379
