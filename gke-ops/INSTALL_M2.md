@@ -78,58 +78,62 @@ $ kubectl annotate serviceaccount \
 $ kubectl config set-context $(kubectl config current-context) --namespace=magento-ns
 
 > WId を設定してある場合これで namespace と serviceAccount を指定する限りは GSA の権限を共有する
-> kubectl 全てで namespace と serviceAccount を固定していいかも
 
-# NFS 準備
-kubectl apply -f nfs-deploy.yaml
-kubectl apply -f nfs-pvc.yaml
-
-# Helm 準備 (nfs-deploy.yaml に依存している)
+# Helm 準備
 kubectl create serviceaccount -n kube-system tiller
 kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 helm init --service-account tiller
 helm init --upgrade --service-account tiller
 
+TODO: SA, RoleBinding コマンド化
+
+kubectl apply -f storage-class-faster.yaml
 helm install --name redis -f helm-redis-values.yaml stable/redis
-kubectl get secret --namespace default redis -o jsonpath="{.data.redis-password}" | base64 --decode
-> NOTE: REDIS_PASS =
+kubectl get secret --namespace magento-ns redis -o jsonpath="{.data.redis-password}"
+得られた Base64 パスワードを app-secret.yaml に追加
+helm install stable/nfs-server-provisioner --name nfs -f helm-nfs-values.yaml
 
 # GCR Image 格納
 $ gcloud auth configure-docker
 $ docker tag [IMAGE] asia.gcr.io/magento2-gke/magento:1
 $ docker push asia.gcr.io/magento2-gke/magento:1
 
-# Init 開始
+# config, secret
+$ kubectl apply -f app-config.yaml
+$ kubectl apply -f app-secret.yaml
+
+# NetworkPolicy 適用
+kubectl apply -f network-policy.yaml
+
+# NFS 準備
+kubectl apply -f nfs-pvc.yaml
+
+# Init 実行
 $ kubectl apply -f app-init.yaml
-
-$ kubectl exec -it [INIT_POD] -- bash
-
-$ bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=redis-master.default.svc.cluster.local --cache-backend-redis-db=0 --cache-backend-redis-password=
-$ bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=redis-master.default.svc.cluster.local --page-cache-redis-db=1 --page-cache-redis-password=
-$ bin/magento setup:config:set --session-save=redis --session-save-redis-host=redis-master.default.svc.cluster.local --session-save-redis-log-level=3 --session-save-redis-db=2 --session-save-redis-password=
-
-$ bin/magento deploy:mode:set production
-
 $ kubectl delete -f app-init.yaml
 
-# Admin 準備 (app-init.yaml の実行が前提条件)
-kubectl apply -f app-admin-deploy.yaml
+# 予約 IP と証明書を準備
 gcloud compute addresses create magento-admin-static-ip --global
+gcloud compute addresses create magento-static-ip --global
+ssl-certificate.yaml
+
+# Admin 準備
+kubectl apply -f app-admin-deploy.yaml
 kubectl apply -f app-admin-ing.yaml
-Ingress を導入後に暖気3分待つ
+Ingress を導入後に暖気が必要
 CloudDNS に Static IP 設定する
 
-# App 準備 (app-init.yaml の実行が前提条件)
+# App 準備
 kubectl apply -f app-front-deploy.yaml
-Ingress を導入する前に暖気3分待つ
-gcloud compute addresses create magento-static-ip --global
 kubectl apply -f app-front-ing.yaml
+Ingress を導入後に暖気が必要
 CloudDNS に Static IP 設定する
-Ingress を導入後に暖気3分待つ
 Change Admin URL で 管理画面 > 店舗 > 設定 > 高度な設定 > 管理者 > ベースURL に [ADMIN_DOMAIN_NAME] 設定
 
-# NetworkPolicy App <=> Redis
-kubectl apply -f network-policy.yaml
+# SSL Certificate の Provisioning が結構かかる
+$ gcloud beta compute ssl-certificates list
+# SSL Certificate の初期化が結構かかる( ERR_SSL_VERSION_OR_CIPHER_MISMATCH ) 15分ほど暖気が必要
+# PROVISIONING FAIL も発生する
 
 # Cron 起動
 kubectl apply -f app-cron.yaml
