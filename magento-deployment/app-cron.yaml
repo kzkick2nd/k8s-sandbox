@@ -34,7 +34,7 @@ spec:
           name: magento
           resources:
             requests:
-              memory: 768Mi
+              memory: 1000Mi
               cpu: 500m
           env:
             - name: SECRET_DB_PASSWORD
