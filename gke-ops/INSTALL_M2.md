@@ -50,8 +50,8 @@ $ gcloud projects add-iam-policy-binding magento2-gke \
     --role roles/storage.objectViewer
 
 # GKE クラスター作成
-- Small * 3
-- Preemptible CPU2 3GB SSD50GB * 3
+- small-pool * 3
+- preemptible-pool CPU2 3.75GB SSD50GB * 3
 
 ※ 以下は GUI から生成したコマンドだが結果が違うので GUI でやった方が良いかも(2019/09/18)
 $ gcloud beta container --project "magento2-gke" clusters create "magento-cluster" --region "asia-northeast1" --no-enable-basic-auth --release-channel "regular" --machine-type "custom-2-3072" --image-type "COS" --disk-type "pd-ssd" --disk-size "50" --metadata disable-legacy-endpoints=true --node-taints cloud.google.com/gke-preemptible=true:NoSchedule --service-account "magento-gke@magento2-gke.iam.gserviceaccount.com" --preemptible --num-nodes "1" --enable-stackdriver-kubernetes --enable-ip-alias --network "projects/magento2-gke/global/networks/magento" --subnetwork "projects/magento2-gke/regions/asia-northeast1/subnetworks/magento" --default-max-pods-per-node "110" --enable-network-policy --addons HorizontalPodAutoscaling,HttpLoadBalancing --enable-autoupgrade --enable-autorepair --maintenance-window "21:00" --enable-vertical-pod-autoscaling --identity-namespace "magento2-gke.svc.id.goog" --enable-shielded-nodes --shielded-secure-boot && gcloud beta container --project "magento2-gke" node-pools create "small-pool" --cluster "magento-cluster" --region "asia-northeast1" --machine-type "g1-small" --image-type "COS" --disk-type "pd-ssd" --disk-size "50" --metadata disable-legacy-endpoints=true --service-account "magento-gke@magento2-gke.iam.gserviceaccount.com" --num-nodes "1" --enable-autoupgrade --enable-autorepair --shielded-secure-boot
