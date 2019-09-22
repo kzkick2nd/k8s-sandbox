@@ -49,6 +49,11 @@ spec:
                 secretKeyRef:
                   name: magento-secret
                   key: admin-password
+            - name: SECRET_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: magento-secret
+                  key: redis-password
           envFrom:
             - configMapRef:
                 name: magento-config
@@ -81,31 +86,45 @@ spec:
                       --language=ja_JP \
                       --currency=JPY \
                       --timezone=Asia/Tokyo \
-                      --use-rewrites=1"
+                      --use-rewrites=1 \
+                    && bin/magento setup:config:set -n --cache-backend=redis \
+                      --cache-backend-redis-server=redis-master.magento-ns.svc.cluster.local \
+                      --cache-backend-redis-db=0 \
+                      --cache-backend-redis-password=$SECRET_REDIS_PASSWORD \
+                    && bin/magento setup:config:set -n --page-cache=redis \
+                      --page-cache-redis-server=redis-master.magento-ns.svc.cluster.local \
+                      --page-cache-redis-db=1 \
+                      --page-cache-redis-password=$SECRET_REDIS_PASSWORD \
+                    && bin/magento setup:config:set -n --session-save=redis \
+                      --session-save-redis-host=redis-master.magento-ns.svc.cluster.local \
+                      --session-save-redis-log-level=3 \
+                      --session-save-redis-db=2 \
+                      --session-save-redis-password=$SECRET_REDIS_PASSWORD \
+                    && bin/magento deploy:mode:set production"
           volumeMounts:
-            - name: nfs-generated-pvc
-              mountPath: /var/www/magento/nfs_generated
-            - name: nfs-view-preprocessed-pvc
-              mountPath: /var/www/magento/var/view_preprocessed
-            - name: nfs-etc-pvc
-              mountPath: /var/www/magento/app/nfs_etc
             - name: nfs-upload-pvc
               mountPath: /var/www/magento/pub/media/upload
+            - name: nfs-etc-pvc
+              mountPath: /var/www/magento/app/nfs_etc
+            - name: nfs-view-preprocessed-pvc
+              mountPath: /var/www/magento/var/view_preprocessed
+            - name: nfs-generated-pvc
+              mountPath: /var/www/magento/nfs_generated
             - name: nfs-static-pvc
               mountPath: /var/www/magento/pub/nfs_static
       volumes:
-        - name: nfs-generated-pvc
-          persistentVolumeClaim:
-            claimName: nfs-generated-pvc
-        - name: nfs-view-preprocessed-pvc
-          persistentVolumeClaim:
-            claimName: nfs-view-preprocessed-pvc
         - name: nfs-etc-pvc
           persistentVolumeClaim:
             claimName: nfs-etc-pvc
         - name: nfs-upload-pvc
           persistentVolumeClaim:
             claimName: nfs-upload-pvc
+        - name: nfs-view-preprocessed-pvc
+          persistentVolumeClaim:
+            claimName: nfs-view-preprocessed-pvc
+        - name: nfs-generated-pvc
+          persistentVolumeClaim:
+            claimName: nfs-generated-pvc
         - name: nfs-static-pvc
           persistentVolumeClaim:
             claimName: nfs-static-pvc

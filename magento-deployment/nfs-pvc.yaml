@@ -4,9 +4,6 @@ metadata:
   namespace: magento-ns
   name: nfs-etc-pvc
 spec:
-  selector:
-    matchLabels:
-      type: nfs-etc-pv
   accessModes:
     - ReadWriteMany
   storageClassName: nfs
@@ -15,52 +12,17 @@ spec:
       storage: 64Mi
 ---
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: nfs-etc-pv
-  labels:
-    type: nfs-etc-pv
-spec:
-  capacity:
-    storage: 64Mi
-  accessModes:
-    - ReadWriteMany
-  storageClassName: nfs
-  nfs:
-    server: nfs-server.magento-ns.svc.cluster.local
-    path: /etc/
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   namespace: magento-ns
   name: nfs-view-preprocessed-pvc
 spec:
-  selector:
-    matchLabels:
-      type: nfs-view-preprocessed-pv
   accessModes:
     - ReadWriteMany
   storageClassName: nfs
   resources:
     requests:
       storage: 1Gi
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: nfs-view-preprocessed-pv
-  labels:
-    type: nfs-view-preprocessed-pv
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteMany
-  storageClassName: nfs
-  nfs:
-    server: nfs-server.magento-ns.svc.cluster.local
-    path: /view_preprocessed/
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -68,9 +30,6 @@ metadata:
   namespace: magento-ns
   name: nfs-generated-pvc
 spec:
-  selector:
-    matchLabels:
-      type: nfs-generated-pv
   accessModes:
     - ReadWriteMany
   storageClassName: nfs
@@ -79,52 +38,17 @@ spec:
       storage: 1Gi
 ---
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: nfs-generated-pv
-  labels:
-    type: nfs-generated-pv
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteMany
-  storageClassName: nfs
-  nfs:
-    server: nfs-server.magento-ns.svc.cluster.local
-    path: /generated/
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   namespace: magento-ns
   name: nfs-static-pvc
 spec:
-  selector:
-    matchLabels:
-      type: nfs-static-pv
   accessModes:
     - ReadWriteMany
   storageClassName: nfs
   resources:
     requests:
       storage: 2Gi
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: nfs-static-pv
-  labels:
-    type: nfs-static-pv
-spec:
-  capacity:
-    storage: 2Gi
-  accessModes:
-    - ReadWriteMany
-  storageClassName: nfs
-  nfs:
-    server: nfs-server.magento-ns.svc.cluster.local
-    path: /static/
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -132,28 +56,9 @@ metadata:
   namespace: magento-ns
   name: nfs-upload-pvc
 spec:
-  selector:
-    matchLabels:
-      type: nfs-upload-pv
   accessModes:
     - ReadWriteMany
   storageClassName: nfs
   resources:
     requests:
       storage: 2Gi
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: nfs-upload-pv
-  labels:
-    type: nfs-upload-pv
-spec:
-  capacity:
-    storage: 2Gi
-  accessModes:
-    - ReadWriteMany
-  storageClassName: nfs
-  nfs:
-    server: nfs-server.magento-ns.svc.cluster.local
-    path: /upload/

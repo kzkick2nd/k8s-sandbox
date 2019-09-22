@@ -10,12 +10,3 @@ spec:
   backend:
     serviceName: magento-app
     servicePort: 80
----
-apiVersion: networking.gke.io/v1beta1
-kind: ManagedCertificate
-metadata:
-  namespace: magento-ns
-  name: frontend-certificate
-spec:
-  domains:
-    - kzkiq.com
