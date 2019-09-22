@@ -137,16 +137,21 @@ kubectl apply -f app-cron.yaml
 # => FIN
 
 ## NOTE
-> MEMO: node と pv が同じ zone に無いと起動できない
-> MEMO: GoogleDomain だろうと NS の変更は必要
-> MEMO: CDN は専用ルールが必要
-> MEMO: インスタンスの公開IP出てる
-> NOTE: 一部 Node 止める gcloud compute instances stop https://cloud.google.com/compute/docs/instances/stop-start-instance#stopping_an_instance
+> node と pv が同じ zone に無いと起動できない
+> GoogleDomain だろうと NS の変更は必要
+> CDN は専用ルールが必要
+> インスタンスの公開IP出てる
+> 一部 Node 止める gcloud compute instances stop https://cloud.google.com/compute/docs/instances/stop-start-instance#stopping_an_instance
 > NOTE redis と nfs 落ちるとどうしようもない => taints
 > MEMO: tiller アカウントのセキュリティ設定
     Please note: by default, Tiller is deployed with an insecure 'allow unauthenticated users' policy.
     To prevent this, run `helm init` with the --tiller-tls-verify flag.
     For more information on securing your installation see: https://docs.helm.sh/using_helm/#securing-your-helm-installation
-> MEMO: PVC にも namespace 必要
+> PVC にも namespace 必要
 > PV に namespace 必要
 > mount.nfs: Connection timed out 権限か火壁か => Namespace 書き忘れだった...
+> Error during sync: error running backend syncing routine: googleapi: Error 403: QUOTA_EXCEEDED - Quota 'BACKEND_SERVICES' exceeded. Limit: 5.0 globally.
+    > BACKEND_SERVICES 作成の割当数が少ないとでる
+> helm value 更新
+    helm upgrade で対応できるが、書き換え禁止情報もある
+    https://medium.com/@kcatstack/understand-helm-upgrade-flags-reset-values-reuse-values-6e58ac8f127e
