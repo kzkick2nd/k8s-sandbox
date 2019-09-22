@@ -7,7 +7,9 @@ https://devdocs.magento.com/guides/v2.3/install-gde/install/cli/install-cli-subc
 gcloud sql databases delete [DB_NAME] -i [INSTANCE_NAME]
 bin/magento admin:user:unlock
 bin/magento setup:store-config:set --base-url=
+bin/magento setup:di:compile
 bin/magento setup:static-content:deploy ja_JP
+bin/magento config:show
 
 gcloud iam service-accounts list
 gcloud info --format='value(config.project)'
