@@ -116,7 +116,6 @@ TODO: SA, RoleBinding コマンド化
 # 予約 IP と証明書を準備
         $ gcloud compute addresses create magento-admin-static-ip --global
         $ gcloud compute addresses create magento-static-ip --global
-        $ kubectl apply -f ssl-certificate.yaml
 
 # Admin 準備
         $ kubectl apply -f app-admin-deploy.yaml
@@ -131,7 +130,9 @@ TODO: SA, RoleBinding コマンド化
         # CloudDNS に Static IP 設定する
         # Change Admin URL で 管理画面 > 店舗 > 設定 > 高度な設定 > 管理者 > ベースURL に [ADMIN_DOMAIN_NAME] 設定
 
+# SSL 証明書発行
         # SSL Certificate の Provisioning が結構かかる
+        $ kubectl apply -f ssl-certificate.yaml
         $ gcloud beta compute ssl-certificates list
         # SSL Certificate の初期化が結構かかる( ERR_SSL_VERSION_OR_CIPHER_MISMATCH ) 15分ほど暖気が必要
         # PROVISIONING FAIL も発生する
