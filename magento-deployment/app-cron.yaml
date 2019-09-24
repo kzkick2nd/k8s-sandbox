@@ -46,6 +46,7 @@ spec:
                     && cp -r /var/www/magento/nfs_generated/* /var/www/magento/generated \
                     && cp -r /var/www/magento/pub/nfs_static/* /var/www/magento/pub/static \
                     && cp -r /var/www/magento/var/nfs_view_preprocessed/* /var/www/magento/var/view_preprocessed \
+                    && bin/magento cron:install --force \
                     && service cron start"
           volumeMounts:
             - name: nfs-upload-pvc
